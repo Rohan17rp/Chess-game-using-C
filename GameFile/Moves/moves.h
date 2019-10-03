@@ -4,6 +4,8 @@ typedef struct Move {
         char final_row;
         uint32_t initial_col;
         uint32_t final_col;
+	uint32_t initial_row_val;
+	uint32_t final_row_val;
 }Move;
 Move move;
 
