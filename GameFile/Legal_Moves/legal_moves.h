@@ -1,12 +1,3 @@
-#include "../includes.h"
-typedef struct Move {
-	char initial_row;
-	char final_row;
-	uint32_t initial_col;
-	uint32_t final_col;
-}Move;
-Move move;
-
 int legal_move_check(uint8_t block_val, Move *move);
 int pawn_legal(Move *move);
 int bishop_legal(Move *move);
