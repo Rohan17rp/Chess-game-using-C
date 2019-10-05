@@ -19,7 +19,7 @@ void set_board_default(BOARD *chess_board){
 
 uint8_t get_block(uint32_t column_number, uint32_t row_val){
 	uint8_t block_val;
-	block_val = (uint8_t)(row_val >> (4 * (column_number - 1)));
+	block_val = (uint8_t)(row_val >> (4 * (8 - column_number)));
 	return block_val & 0x0000000F;
 }
 /**
