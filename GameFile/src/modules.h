@@ -4,8 +4,7 @@
 #define SUCCESS         1
 #define FAILED          0                 
 */
-#include<stdio.h>
-#include<stdint.h>
+#include "../Typedef/headers.h"
 #include "../Boards/boards.h"
 #include "../Pieces/pieces.h"
 #include "../Moves/moves.h"

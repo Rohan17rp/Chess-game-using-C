@@ -67,11 +67,7 @@ uint32_t erase_block_val(char row_alpha, uint8_t col_no, BOARD *chess_board){
 					row_val = 0xFFFFFFF0;
 					break;
 			}
-			printf("Row Value : %x\n", row_val);
-			printf("Initial row number : %x\n", row_num);
-			printf("Initial row value : %x\n", chess_board->row[row_num]);
 			chess_board->row[row_num] &= row_val;
-			printf("Final row value : %x\n", chess_board->row[row_num]);
 			return SUCCESS;
 		}
 		shift++;

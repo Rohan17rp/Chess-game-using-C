@@ -33,3 +33,19 @@ uint32_t get_row(char row_alphabet, BOARD *chess_board){
 	row_num = row_alphabet - 'a';
 	return chess_board->row[row_num];
 }
+
+
+/**
+ *\ brief finds the value of given row as 32-bit int
+ *
+ *\param row_alphabet alphabet used to define row
+ */
+
+ void print_hex_board(BOARD *chess_board){
+ 	int i;
+	printf("\n");
+ 	for(i = 0; i < 8; i++){
+		printf("\t%08x\n",chess_board->row[i]);
+	}
+	printf("\n");
+}
