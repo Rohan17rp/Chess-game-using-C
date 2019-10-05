@@ -24,26 +24,29 @@ board	Boards/boards.h	/^}board;$/;"	t	typeref:struct:board
 board	UI/ui.c	/^char board[37][58] = {$/;"	v
 bool	Pieces/pieces.h	/^	}bool;$/;"	t	typeref:enum:__anon1
 chess_board	Boards/boards.h	/^board chess_board;$/;"	v
-erase_block_val	Moves/moves.c	/^uint32_t erase_block_val(Move *move, board *chess_board){$/;"	f
+erase_block_val	Moves/moves.c	/^uint32_t erase_block_val(char row_alpha, uint8_t col_no, board *chess_board){$/;"	f
 false	Pieces/pieces.h	/^	false,$/;"	e	enum:__anon1
 final_col	Moves/moves.h	/^        uint32_t final_col;$/;"	m	struct:Move
 final_row	Moves/moves.h	/^        char final_row;$/;"	m	struct:Move
+final_row_val	Moves/moves.h	/^	uint32_t final_row_val;$/;"	m	struct:Move
 get_block	Boards/boards.c	/^uint8_t get_block(uint32_t column_number, uint32_t row_val){$/;"	f
 get_row	Boards/boards.c	/^uint32_t get_row(char row_alphabet, board *chess_board){$/;"	f
 i	UI/ui.c	/^int i, j;$/;"	v
 identify_piece	Pieces/pieces.c	/^void identify_piece(){$/;"	f
 initial_col	Moves/moves.h	/^        uint32_t initial_col;$/;"	m	struct:Move
 initial_row	Moves/moves.h	/^        char initial_row;$/;"	m	struct:Move
+initial_row_val	Moves/moves.h	/^	uint32_t initial_row_val;$/;"	m	struct:Move
 j	UI/ui.c	/^int i, j;$/;"	v
 king_legal	Legal_Moves/legal_moves.c	/^int king_legal(Move *move){$/;"	f
 knight_legal	Legal_Moves/legal_moves.c	/^int knight_legal(Move *move){$/;"	f
-legal_move_check	Legal_Moves/legal_moves.c	/^int legal_move_check(uint8_t block_val, Move *move){$/;"	f
+legal_move_check	Legal_Moves/legal_moves.c	/^uint8_t legal_move_check(uint8_t block_val, Move *move){$/;"	f
 main	process.c	/^int main(){$/;"	f
 main	src/main.c	/^int main(){$/;"	f
 move	Moves/moves.h	/^Move move;$/;"	v
-move_piece	Moves/moves.c	/^void move_piece(Move *move, board *chess_board){$/;"	f
+move_piece	Moves/moves.c	/^uint8_t move_piece(Move *move, board *chess_board){$/;"	f
 pawn_legal	Legal_Moves/legal_moves.c	/^int pawn_legal(Move *move){$/;"	f
 print_board	UI/ui.c	/^void print_board(){$/;"	f
+put_block_value_to_designated_block	Moves/moves.c	/^void put_block_value_to_designated_block(char row_alpha, uint8_t col_no, uint8_t block_val, board *chess_board){$/;"	f
 queen_legal	Legal_Moves/legal_moves.c	/^int queen_legal(Move *move){$/;"	f
 rook_legal	Legal_Moves/legal_moves.c	/^int rook_legal(Move *move){$/;"	f
 row	Boards/boards.h	/^	uint32_t row[8];$/;"	m	struct:board

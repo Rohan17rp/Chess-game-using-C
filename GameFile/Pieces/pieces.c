@@ -14,6 +14,9 @@
 #define BLOCK	0x0
 #endif
 
+/**
+ * brief identify which category does the piece belong to
+ */
 void identify_piece(){
 	switch(BLOCK){
 		case 0x0:

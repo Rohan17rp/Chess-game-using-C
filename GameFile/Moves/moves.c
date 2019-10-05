@@ -1,24 +1,46 @@
 #include "moves.h"
+/**
+ * brief MOVE piece from 1 block to other
+ *
+ * params *move contains move variables
+ * params *chess_board declares the board
+ */
 
-void move_piece(Move *move, board *chess_board){
+uint8_t move_piece(MOVE *move, BOARD *chess_board){
 	uint8_t block_val;
 	block_val = get_block(move->initial_col, move->initial_row_val);
-	printf("Block Value : %d\n", block_val);
-	erase_block_val(move, chess_board);
-	move->initial_row_val = get_row(move->initial_row, chess_board);
-	block_val = get_block(move->initial_col, move->initial_row_val);
-	printf("Block Value : %d\n", block_val);
+
+	if(erase_block_val(move->initial_row, move->initial_col, chess_board));
+	else{
+		printf("Illegal Stuff\n");
+		return FAILED;
+	}
+	if(erase_block_val(move->final_row, move->final_col, chess_board));
+	else{
+		printf("Illegal Stuff\n");
+		return FAILED;
+	}
+
+	put_block_value_to_designated_block(move->final_row, move->final_col, block_val, chess_board);
+
+
+	block_val = get_block(move->final_col, move->final_row_val);
+	return SUCCESS;
 }
 
 /*
  * brief Erases the value int the given block
  * 
- * params
+ * params row_alpha row alphabet of block
+ * params col_no column number of block
+ * params *chess_board declares the board
  */ 
-uint32_t erase_block_val(Move *move, board *chess_board){
+uint32_t erase_block_val(char row_alpha, uint8_t col_no, BOARD *chess_board){
 	uint32_t shift = 1, row_val;
+	uint8_t row_num;
+	row_num = row_alpha - 'a';
 	while(shift < 9){
-		if(shift == move->initial_col){
+		if(shift == col_no){
 			switch(shift){
 				case 1:
 					row_val = 0x0FFFFFFF;
@@ -46,12 +68,26 @@ uint32_t erase_block_val(Move *move, board *chess_board){
 					break;
 			}
 			printf("Row Value : %x\n", row_val);
-			printf("Initial row value : %x\n", chess_board->row[move->initial_row]);
-			chess_board->row[move->initial_row] &= row_val;
-			printf("Final row value : %x\n", chess_board->row[move->initial_row]);
+			printf("Initial row number : %x\n", row_num);
+			printf("Initial row value : %x\n", chess_board->row[row_num]);
+			chess_board->row[row_num] &= row_val;
+			printf("Final row value : %x\n", chess_board->row[row_num]);
 			return SUCCESS;
 		}
 		shift++;
 	}
 	return FAILED;
+}
+/**
+ * brief puts a specific value to the selected block 
+ *
+ * params row_alpha row alphabet of block
+ * params col_no column number of block
+ * params block_val value of block that need to be put
+ * params *chess_board declares the board
+ */
+void put_block_value_to_designated_block(char row_alpha, uint8_t col_no, uint8_t block_val, BOARD *chess_board){
+	uint8_t row_num;
+	row_num = row_alpha - 'a';
+	chess_board->row[row_num] |= (block_val << (4 * (8 - col_no)));
 }

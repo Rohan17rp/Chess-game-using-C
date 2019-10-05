@@ -1,5 +1,5 @@
 /*	Definations and headers 	*/
-#include "includes.h"
+#include "UI/ui.c"
 
 int main(){
 	/*	Display UI for the Board	*/

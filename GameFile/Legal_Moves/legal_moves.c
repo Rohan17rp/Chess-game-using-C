@@ -7,7 +7,7 @@
  * param move struct keeping track of moves
  */
 
-int legal_move_check(uint8_t block_val, Move *move){
+uint8_t legal_move_check(uint8_t block_val, MOVE *move){
 	uint8_t legal;
 	switch(block_val){
 		case 0:
@@ -47,7 +47,7 @@ int legal_move_check(uint8_t block_val, Move *move){
  *
  * param move struct keeping track of moves
  */
-int pawn_legal(Move *move){
+int pawn_legal(MOVE *move){
 	if(move->initial_col != move->final_col)
 		return FAILED;
 }
@@ -58,7 +58,7 @@ int pawn_legal(Move *move){
  *
  * param move struct keeping track of moves
  */
-int knight_legal(Move *move){
+int knight_legal(MOVE *move){
 
 }
 
@@ -68,7 +68,8 @@ int knight_legal(Move *move){
  *
  * param move struct keeping track of moves
  */
-int bishop_legal(Move *move){
+ //x+c, y-c is also permissible, to be implemented
+int bishop_legal(MOVE *move){
 	if(!((move->final_col - move->initial_col) ^ (move->final_row - move->initial_row)))
 		return SUCCESS;
 	else 
@@ -81,7 +82,7 @@ int bishop_legal(Move *move){
  *
  * param move struct keeping track of moves
  */
-int rook_legal(Move *move){
+int rook_legal(MOVE *move){
 	if((move->initial_col ^ move->final_col) && (move->initial_row == move->final_row))
 		return SUCCESS;
 	else if((move->initial_row ^ move->final_row) && (move->initial_col == move->final_col))
@@ -96,7 +97,7 @@ int rook_legal(Move *move){
  *
  * param move struct keeping track of moves
  */
-int queen_legal(Move *move){
+int queen_legal(MOVE *move){
 	if(rook_legal(move) ^ bishop_legal(move))
 		return SUCCESS;
 	else 
@@ -109,7 +110,7 @@ int queen_legal(Move *move){
  *
  * param move struct keeping track of moves
  */
-int king_legal(Move *move){
+int king_legal(MOVE *move){
 	if(!((move->initial_col - move->final_col) ^ 0x01) & !(move->initial_row ^ move->final_row))
 		return SUCCESS;
 	else if(!((move->initial_row - move->final_row) ^ 0x01) & !(move->initial_col ^ move->final_col))
