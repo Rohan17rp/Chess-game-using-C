@@ -30,6 +30,8 @@ int main(){
 		if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
 			if(move_piece(&move, &chess_board)){
 				printf("Legal Move\n");
+		/* Print board after legal move */
+		print_hex_board(&chess_board);
 			}
 			else{
 				printf("Illegal Move\n");
@@ -39,8 +41,6 @@ int main(){
 			printf("Illegal Move\n");
 		}
 
-		/* Print board after move */
-		print_hex_board(&chess_board);
 
 		/* After Move */
 		move.final_row_val = get_row(move.final_row, &chess_board);

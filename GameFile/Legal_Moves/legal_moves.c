@@ -28,16 +28,12 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 				legal = knight_legal(move);
 				break;
 			case 3:
-				legal = bishop_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
-				break;
 			case 11:
 				legal = bishop_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
+				if(legal)
+					legal = bishop_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
 				break;
 			case 4:
-				legal = rook_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
-				if(legal)
-					legal = rook_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
-				break;
 			case 12:
 				legal = rook_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
 				if(legal)
@@ -111,7 +107,6 @@ bool knight_legal(MOVE *move){
  *
  * param move struct keeping track of moves
  */
-//x+c, y-c is also permissible, to be implemented
 bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
 	if(!(abs(final_col - initial_col) ^ (abs(final_row - initial_row))))
 		return SUCCESS;
@@ -208,7 +203,26 @@ bool pawn_block(){
 bool knight_block(){
 	return SUCCESS;
 }
-bool bishop_block(){
+bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board){
+	bool piece_unblocked;
+	uint8_t block_val;
+	uint32_t row_val;
+	while(abs(initial_col - final_col)){
+		if(initial_col < final_col)
+			initial_col++;
+		else
+			initial_col--;
+		if(initial_row < final_row)
+			initial_row++;
+		else
+			initial_row--;
+
+		row_val =  get_row(initial_row, chess_board);
+		block_val = get_block(initial_col, row_val);
+		piece_unblocked = is_empty(block_val);
+		if(!piece_unblocked)
+			return FAILED;
+	}	
 	return SUCCESS;
 }
 /**
@@ -222,9 +236,11 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	uint8_t block_val;
 	uint32_t row_val;
 	/* Check column for blocking pieces */
-	while(abs(initial_col - final_col)){
+	while(abs(initial_col - final_col) ){
 		if(initial_col < final_col)
 			initial_col++;
+		else if (initial_col == final_col)
+			return SUCCESS;
 		else
 			initial_col--;
 		row_val =  get_row(initial_row, chess_board);
@@ -238,6 +254,8 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	while(abs(initial_row - final_row)){
 		if(initial_row < final_row)
 			initial_row++;
+		else if (initial_row == final_row)
+			return SUCCESS;
 		else
 			initial_row--;
 		row_val =  get_row(initial_row, chess_board);
@@ -250,8 +268,13 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	return SUCCESS;
 }
 
-bool queen_block(){
-	return SUCCESS;
+bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col,BOARD *chess_board){
+	if(rook_legal(initial_row, final_row, initial_col, final_col))
+		return rook_block(initial_row, final_row, initial_col, final_col, chess_board);
+	else
+		return bishop_block(initial_row, final_row, initial_col, final_col, chess_board);
+	printf("Prerequisites might not have been satisfied");
+	return FAILED;
 }
 bool king_check(){
 	return SUCCESS;

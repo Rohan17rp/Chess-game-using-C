@@ -13,9 +13,9 @@ bool check_blocking_piece(MOVE *move, BOARD *board, uint8_t block_val_initial);
 
 bool pawn_block();
 bool knight_block();
-bool bishop_block();
+bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board);
 bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board);
-bool queen_block();
+bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col,BOARD *chess_board);
 bool king_check();
 
 bool is_killed(uint8_t initial_block_val, uint8_t final_block_val);
