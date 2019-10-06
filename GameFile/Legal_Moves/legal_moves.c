@@ -21,10 +21,8 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 			case 9:
 				legal = pawn_legal(move);
 				break;
-			case 2: 
-				legal = knight_legal(move);
-				break;
-			case 10: 
+			case 2:
+			case 10:
 				legal = knight_legal(move);
 				break;
 			case 3:
@@ -40,14 +38,12 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 					legal = rook_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
 				break;
 			case 5:
-				legal = queen_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
-				break;
 			case 13:
 				legal = queen_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
+				if(legal)
+					legal = queen_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
 				break;
 			case 6: 
-				legal = king_legal(move);
-				break;
 			case 14: 
 				legal = king_legal(move);
 				break;
