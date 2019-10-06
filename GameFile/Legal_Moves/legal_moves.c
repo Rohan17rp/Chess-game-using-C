@@ -7,7 +7,7 @@
  * param move struct keeping track of moves
  */
 
-bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *move){
+bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *move, BOARD *chess_board){
 	if(legal_kill(block_val_initial, block_val_final)){
 		bool legal;
 		switch(block_val_initial){
@@ -28,22 +28,26 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 				legal = knight_legal(move);
 				break;
 			case 3:
-				legal = bishop_legal(move);
+				legal = bishop_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
 				break;
 			case 11:
-				legal = bishop_legal(move);
+				legal = bishop_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
 				break;
 			case 4:
-				legal = rook_legal(move);
+				legal = rook_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
+				if(legal)
+					legal = rook_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
 				break;
 			case 12:
-				legal = rook_legal(move);
+				legal = rook_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
+				if(legal)
+					legal = rook_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
 				break;
 			case 5:
-				legal = queen_legal(move);
+				legal = queen_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
 				break;
 			case 13:
-				legal = queen_legal(move);
+				legal = queen_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
 				break;
 			case 6: 
 				legal = king_legal(move);
@@ -108,8 +112,8 @@ bool knight_legal(MOVE *move){
  * param move struct keeping track of moves
  */
 //x+c, y-c is also permissible, to be implemented
-bool bishop_legal(MOVE *move){
-	if(!(abs(move->final_col - move->initial_col) ^ (abs(move->final_row - move->initial_row))))
+bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
+	if(!(abs(final_col - initial_col) ^ (abs(final_row - initial_row))))
 		return SUCCESS;
 	else 
 		return FAILED;
@@ -121,10 +125,10 @@ bool bishop_legal(MOVE *move){
  *
  * param move struct keeping track of moves
  */
-bool rook_legal(MOVE *move){
+bool rook_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
 	bool mov_row, mov_col;
-	mov_row = move->initial_col ^ move->final_col;
-	mov_col = move->initial_row ^ move->final_row;
+	mov_row = initial_col ^ final_col;
+	mov_col = initial_row ^ final_row;
 	if(mov_row ^ mov_col)
 		return SUCCESS;
 	else 
@@ -137,8 +141,8 @@ bool rook_legal(MOVE *move){
  *
  * param move struct keeping track of moves
  */
-bool queen_legal(MOVE *move){
-	if(rook_legal(move) ^ bishop_legal(move))
+bool queen_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
+	if(rook_legal(initial_row, final_row, initial_col, final_col) ^ bishop_legal(initial_row, final_row, initial_col, final_col))
 		return SUCCESS;
 	else 
 		return FAILED;
@@ -165,9 +169,9 @@ bool king_legal(MOVE *move){
  * param final_block_val value of block where piece is being moved
  */
 bool legal_kill(uint8_t initial_block_val, uint8_t final_block_val){
-	if((final_block_val >> 3) ^ (initial_block_val >> 3))
+	if(is_killed(initial_block_val, final_block_val))
 		return SUCCESS;
-	else if(final_block_val == 0)
+	else if(is_empty(final_block_val))
 		return SUCCESS;
 	else{ 
 		printf("Can't Kill Your Own Piece\n");
@@ -176,39 +180,28 @@ bool legal_kill(uint8_t initial_block_val, uint8_t final_block_val){
 }
 
 /**
- * brief Checks whether there is an enemy piece blocking path
- *
+ * brief tells whether enemy piece is killed or not
  *
  */
-bool check_blocking_piece(MOVE *move, BOARD *board, uint8_t block_val_initial){
-	bool block;
-	switch(block_val_initial){
-		case 0x1:
-			block = pawn_block();
-			break;
-		case 0x2:
-			block = knight_block();
-			break;
-		case 0x3:
-			/* Any block between initial and final position in same diagonal should return failure */
-			block = bishop_block();
-			break;
-		case 0x4:
-			block = rook_block();
-			break;
-		case 0x5:
-			/* Combination of bishop and rook logic */
-			block = queen_block();
-			break;
-		case 0x6:
-			block = king_check();
-			break;
-		default : 
-			printf("EMPTY");
-			break;
-	}
-	return block;
+bool is_killed(uint8_t initial_block_val, uint8_t final_block_val){
+	if((final_block_val >> 3) ^ (initial_block_val >> 3))
+		return SUCCESS;
+	else 
+		return FAILED;
 }
+
+
+/**
+ * brief SUCCESS if block is empty
+ *
+ */
+bool is_empty(uint8_t final_block_val){
+	if(final_block_val == 0)
+		return SUCCESS;
+	else 
+		return FAILED;
+}
+
 bool pawn_block(){
 	return SUCCESS;
 }
@@ -218,12 +211,45 @@ bool knight_block(){
 bool bishop_block(){
 	return SUCCESS;
 }
-bool rook_block(){
+/**
+ * brief checks for blocking piece between final and initial position
+ * prerequisites Legal_kill and rook_legal should be implemented beforehand
+ *
+ */
+bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board){
+	bool piece_unblocked;
 	/* Any block between initial and final position in same line should return failure */
-	/* Check row for blocking pieces */
+	uint8_t block_val;
+	uint32_t row_val;
 	/* Check column for blocking pieces */
-
+	while(abs(initial_col - final_col)){
+		if(initial_col < final_col)
+			initial_col++;
+		else
+			initial_col--;
+		row_val =  get_row(initial_row, chess_board);
+		block_val = get_block(initial_col, row_val);
+		piece_unblocked = is_empty(block_val);
+		if(!piece_unblocked){
+			return FAILED;
+		}
+	}
+	/* Check row for blocking pieces */
+	while(abs(initial_row - final_row)){
+		if(initial_row < final_row)
+			initial_row++;
+		else
+			initial_row--;
+		row_val =  get_row(initial_row, chess_board);
+		block_val = get_block(initial_col, row_val);
+		piece_unblocked = is_empty(block_val);
+		if(!piece_unblocked){
+			return FAILED;
+		}
+	}
+	return SUCCESS;
 }
+
 bool queen_block(){
 	return SUCCESS;
 }
