@@ -259,7 +259,8 @@ bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32
 			initial_row++;
 		else
 			initial_row--;
-
+		if(initial_row == final_row)
+			return SUCCESS;
 		row_val =  get_row(initial_row, chess_board);
 		block_val = get_block(initial_col, row_val);
 		piece_unblocked = is_empty(block_val);
@@ -282,10 +283,10 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	while(abs(initial_col - final_col) ){
 		if(initial_col < final_col)
 			initial_col++;
-		else if (initial_col == final_col)
-			return SUCCESS;
 		else
 			initial_col--;
+		if (initial_col == final_col)
+			return SUCCESS;
 		row_val =  get_row(initial_row, chess_board);
 		block_val = get_block(initial_col, row_val);
 		piece_unblocked = is_empty(block_val);
@@ -297,10 +298,10 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	while(abs(initial_row - final_row)){
 		if(initial_row < final_row)
 			initial_row++;
-		else if (initial_row == final_row)
-			return SUCCESS;
 		else
 			initial_row--;
+		if (initial_row == final_row)
+			return SUCCESS;
 		row_val =  get_row(initial_row, chess_board);
 		block_val = get_block(initial_col, row_val);
 		piece_unblocked = is_empty(block_val);
