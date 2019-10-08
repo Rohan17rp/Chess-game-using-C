@@ -8,6 +8,7 @@ BISHOP	Pieces/pieces.c	8;"	d	file:
 BLOCK	Pieces/pieces.c	14;"	d	file:
 BOARD	Typedef/typedef.h	/^}BOARD;$/;"	t	typeref:struct:board
 BOARD_DEF	Typedef/typedef.h	7;"	d
+BOARD_DISPLAY_DEF	UI/board_display.h	2;"	d
 COL_SPAN	Alpha-Beta Pruning/modules.h	2;"	d
 COL_SPAN	Typedef/typedef.h	2;"	d
 EMPTY	Pieces/pieces.c	5;"	d	file:
@@ -29,8 +30,10 @@ SUCCESS	Typedef/typedef.h	3;"	d
 bishop_block	Legal_Moves/legal_moves.c	/^bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board){$/;"	f
 bishop_legal	Legal_Moves/legal_moves.c	/^bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){$/;"	f
 board	Typedef/typedef.h	/^typedef struct board{$/;"	s
+change_move	UI/ui.c	/^void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_t final_col, uint8_t block_val, char display_board[37][58]){$/;"	f
 chess_board	Typedef/typedef.h	/^BOARD chess_board;$/;"	v
-display_board_set_default	UI/ui.c	/^void display_board_set_default(char initial_row, uint32_t initial_col, char final_row, uint32_t final_col, uint8_t block_val){$/;"	f
+display_board	UI/board_display.c	/^char display_board[37][58] = { $/;"	v
+display_board_set_default	UI/ui.c	/^void display_board_set_default(char display_board[37][58]){$/;"	f
 empty_legal	Legal_Moves/legal_moves.c	/^bool empty_legal(MOVE *move){$/;"	f
 erase_block_val	Moves/moves.c	/^uint32_t erase_block_val(char row_alpha, uint8_t col_no, BOARD *chess_board){$/;"	f
 final_col	Typedef/typedef.h	/^        uint32_t final_col;$/;"	m	struct:Move
@@ -55,6 +58,7 @@ main	src/main.c	/^int main(){$/;"	f
 move	Typedef/typedef.h	/^MOVE move;$/;"	v
 move_piece	Moves/moves.c	/^uint8_t move_piece(MOVE *move, BOARD *chess_board){$/;"	f
 pawn_block	Legal_Moves/legal_moves.c	/^bool pawn_block(uint8_t final_block_val){$/;"	f
+pawn_first_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_kill_legal	Legal_Moves/legal_moves.c	/^bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_legal	Legal_Moves/legal_moves.c	/^bool pawn_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f

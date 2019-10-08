@@ -18,6 +18,9 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 			case 1:
 			case 9:
 				legal = pawn_legal(move, block_val_initial, block_val_final);
+				if(!legal){
+					legal = pawn_first_move_legal(move, block_val_initial, block_val_final, chess_board);
+					}
 				break;
 			case 2:
 			case 10:
@@ -84,9 +87,9 @@ bool pawn_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
 	return FAILED;
 }
 /**
-* \brief gives legal kills for pawn
-*
-*/
+ * \brief gives legal kills for pawn
+ *
+ */
 bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
 	if(final_block_val){
 		if(initial_block_val >> 3){
@@ -104,13 +107,13 @@ bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
 		}
 	}
 	return FAILED;
-	
+
 }
 /**
-* \brief gives legal moves for pawn (excluding killing)
-*
-* 
-*/
+ * \brief gives legal moves for pawn (excluding killing)
+ *
+ * 
+ */
 bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
 	if(is_empty(final_block_val)){
 		if(!(move->initial_col ^ move->final_col)){
@@ -127,6 +130,30 @@ bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
 	return FAILED;
 }
 
+/**
+ * \brief allow pawn to move 2 steps if its first move
+ *
+ */
+bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val, BOARD *chess_board){
+	uint8_t mid_block_val;
+	if(move->initial_row == 'b'){
+		if(move->final_row == 'd'){
+		mid_block_val = get_block(move->initial_col, get_row('c', chess_board)); 
+			if(is_empty(mid_block_val) && is_empty(final_block_val)){
+				return SUCCESS;
+			}
+		}
+	}
+	if(move->initial_row == 'g'){
+		if(move->final_row == 'e'){
+		mid_block_val = get_block(move->initial_col, get_row('f', chess_board)); 
+			if(is_empty(mid_block_val) && is_empty(final_block_val)){
+				return SUCCESS;
+			}
+		}
+	}
+	return FAILED;
+}
 /**
  * brief Return SUCCESS when move is legal FAILED if otherwise
  * for Knight

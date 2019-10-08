@@ -7,6 +7,7 @@ int main(){
 	char initial_row_alphabet, final_row_alphabet;
 	bool check_mate;
 	check_mate = false;
+//	char display_board[37][58];
 
 	/* Set Board to default state */
 	set_board_default(&chess_board);
@@ -30,14 +31,13 @@ int main(){
 		/* Prints board */
 //		print_hex_board(&chess_board);
 
-
 		/* Check For Legal Move */
 		if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
 			if(move_piece(&move, &chess_board)){
 				printf("Legal Move\n");
 				/* Print board after legal move */
 //				print_hex_board(&chess_board);
-
+				/* Display board after move is made */
 				change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
 			}
 			else{
