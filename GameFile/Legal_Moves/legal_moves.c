@@ -16,10 +16,8 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 				legal = empty_legal(move);
 				break;
 			case 1:
-				legal = pawn_legal(move);
-				break;
 			case 9:
-				legal = pawn_legal(move);
+				legal = pawn_legal(move, block_val_initial, block_val_final);
 				break;
 			case 2:
 			case 10:
@@ -62,31 +60,78 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 }
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
- * for Empty Box
+ * \brief legal move for Empty Box
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
+ * \return FAILED as empty boxes don't move
  */
 bool empty_legal(MOVE *move){
 	return FAILED;
 }
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
- * for Pawn
+ * \brief legal move for pawn
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
+ * \return SUCCESS when move is legal FAILED if otherwise
  */
 //RETURNS ONLY SUCCESS AS OF NOW
-bool pawn_legal(MOVE *move){
-	return SUCCESS;
+bool pawn_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
+	if(pawn_kill_legal(move, initial_block_val, final_block_val))
+		return SUCCESS;
+	else if(pawn_move_legal(move, initial_block_val, final_block_val))
+		return SUCCESS;
+	return FAILED;
+}
+/**
+* \brief gives legal kills for pawn
+*
+*/
+bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
+	if(final_block_val){
+		if(initial_block_val >> 3){
+			if((abs(move->final_col - move->initial_col) == 1) && ((move->initial_row - move->final_row) == 1)){
+				if(legal_kill(initial_block_val, final_block_val))
+					return SUCCESS;
+			}
+		}
+		else{
+
+			if((abs(move->final_col - move->initial_col) == 1) && ((move->final_row - move->initial_row) == 1)){
+				if(legal_kill(initial_block_val, final_block_val));
+				return SUCCESS;
+			}
+		}
+	}
+	return FAILED;
+	
+}
+/**
+* \brief gives legal moves for pawn (excluding killing)
+*
+* 
+*/
+bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
+	if(is_empty(final_block_val)){
+		if(!(move->initial_col ^ move->final_col)){
+			if(initial_block_val >> 3){
+				if(move->initial_row - move->final_row == 1)
+					return SUCCESS;
+			}
+			else{
+				if(move->final_row - move->initial_row == 1)
+					return SUCCESS;
+			}
+		}
+	}
+	return FAILED;
 }
 
 /**
  * brief Return SUCCESS when move is legal FAILED if otherwise
  * for Knight
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
  */
 bool knight_legal(MOVE *move){
 	if((abs(move->initial_col - move->final_col) == 2) & (abs(move->initial_row - move->final_row) == 1))
@@ -171,7 +216,7 @@ bool legal_kill(uint8_t initial_block_val, uint8_t final_block_val){
 }
 
 /**
- * brief tells whether enemy piece is killed or not
+ * \brief tells whether enemy piece is killed or not
  *
  */
 bool is_killed(uint8_t initial_block_val, uint8_t final_block_val){
@@ -193,7 +238,9 @@ bool is_empty(uint8_t final_block_val){
 		return FAILED;
 }
 
-bool pawn_block(){
+bool pawn_block(uint8_t final_block_val){
+	if(!is_empty(final_block_val))
+		return FAILED;
 	return SUCCESS;
 }
 bool knight_block(){
