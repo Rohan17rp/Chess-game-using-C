@@ -17,6 +17,7 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 				break;
 			case 1:
 			case 9:
+				//en-passent and promotion not handled
 				legal = pawn_legal(move, block_val_initial, block_val_final);
 				if(!legal){
 					legal = pawn_first_move_legal(move, block_val_initial, block_val_final, chess_board);
@@ -34,6 +35,7 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 				break;
 			case 4:
 			case 12:
+				//castling not handled
 				legal = rook_legal(move->initial_row, move->final_row, move->initial_col, move->final_col);
 				if(legal)
 					legal = rook_block(move->initial_row, move->final_row, move->initial_col, move->final_col, chess_board);
