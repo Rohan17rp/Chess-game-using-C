@@ -58,7 +58,7 @@ main	src/main.c	/^int main(){$/;"	f
 move	Typedef/typedef.h	/^MOVE move;$/;"	v
 move_piece	Moves/moves.c	/^uint8_t move_piece(MOVE *move, BOARD *chess_board){$/;"	f
 pawn_block	Legal_Moves/legal_moves.c	/^bool pawn_block(uint8_t final_block_val){$/;"	f
-pawn_first_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
+pawn_first_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val, BOARD *chess_board){$/;"	f
 pawn_kill_legal	Legal_Moves/legal_moves.c	/^bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_legal	Legal_Moves/legal_moves.c	/^bool pawn_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f

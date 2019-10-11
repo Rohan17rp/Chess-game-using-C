@@ -138,6 +138,10 @@ bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
  */
 bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val, BOARD *chess_board){
 	uint8_t mid_block_val;
+	/* Check whether move is made in same column */
+	if(move->initial_col != move->final_col)
+		return FAILED;
+	/* white pawn first move */
 	if(move->initial_row == 'b'){
 		if(move->final_row == 'd'){
 		mid_block_val = get_block(move->initial_col, get_row('c', chess_board)); 
@@ -146,6 +150,7 @@ bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_
 			}
 		}
 	}
+	/* Black pawn first move */
 	if(move->initial_row == 'g'){
 		if(move->final_row == 'e'){
 		mid_block_val = get_block(move->initial_col, get_row('f', chess_board)); 

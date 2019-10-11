@@ -64,6 +64,14 @@ int main(){
 
 		/* Check For Legal Move */
 		if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
+			if(final_block_val == 0x06){
+				printf("Black Wins\n");
+				check_mate = true;
+			}
+			else if(final_block_val == 0x0e){
+				printf("White Wins\n");
+				check_mate = true;
+			}
 			if(move_piece(&move, &chess_board)){
 				printf("Legal Move\n");
 				/* change turn to opponent in case of legal move */
