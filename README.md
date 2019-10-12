@@ -1,3 +1,7 @@
+**DSA-Project Chess** 
+MIS     : 111803161
+Name    : Rohan Pravin Patil
+
 A basic implementation of 2-player chess engine
 White player being the one on Upper side denoted by UppperCase letters, Black would be in lower side as lowerCase letters
 Use make command from terminal for compiling and ./project to run the code 
