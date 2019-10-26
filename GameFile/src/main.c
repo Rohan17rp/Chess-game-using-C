@@ -1,8 +1,5 @@
 #include "modules.h"
 
-bool check_gameOver(uint8_t);
-FILE* open_file(FILE *fp, char *file_name, char *mode);
-char* get_file_name(int argc, char *argv[]);
 //print_hex_board(&chess_board);//This command works and prints board in form of hex values
 int main(int argc, char *argv[]){
 
@@ -56,12 +53,13 @@ int main(int argc, char *argv[]){
 			if(strlen(name) < 20){
 				printf("%s\n",name);
 				/* Create file with player name */
-				fp = open_file(fp, name, "w+"); 
-				printf("File opened\n");
+				fp = open_file(fp, name, "w+");
+				fclose(fp);
+				printf("File created\n");
 				break;
 			}
 			else
-				printf("Enter a valid name\n");
+				printf("Enter a valid name\nMax Character Limit is 20\n");
 		}
 		/*Display Default Board */
 		display_board_set_default(display_board);
@@ -69,19 +67,23 @@ int main(int argc, char *argv[]){
 	/* If argument is given then open the file to continue game */
 	else if(argc == 2){
 		/* Load Game */
+
 		int count = 0;
 		/* Display saved game */
 		fp = open_file(fp, argv[1], "rw");
+
 		/* Display saved board */
 		display_saved_board(display_board, fp);
 		fclose(fp);
-		/* assign value to chess board row */
+
+		/* Load values from file to respective variables */
 		fp = open_file(fp, argv[1], "rw");
 		while(count < 8 && fscanf(fp, "%x",&chess_board.row[count++]));	
 		int temp;
 		fscanf(fp, "%s%d",name, &temp);
 		white_turn = temp ? true : false ;
 		fclose(fp);
+
 		printf("Game Sucessfully Loaded\n");
 	}
 	else{
@@ -93,28 +95,32 @@ int main(int argc, char *argv[]){
 
 		/* Printing Whose turn is it */		
 		if(white_turn)
-			printf("w->");
+			printf("w-> %s's turn\n",name);
 		else
 			printf("b->");
 
 		/* Take Move input from user */
 		scanf("\n%c%d%c%d", &move.initial_row, &move.initial_col, &move.final_row, &move.final_col);
 
+		/* Quit Game */
 		if(move.initial_row == 'q'){
 			fclose(fp);
 			return 0;
 		}
+		/* Save Game */
 		if(move.initial_row == 's'){
-			/* Save current board position */
-	char *file_name;
-	if(argc == 1)
-		file_name = name;
-	else if(argc == 2)
-		file_name = argv[1];
-	else{
-		perror("File not found");
-		exit(1);
-	}
+			/* Get the name of file to save to */
+			char *file_name;
+			if(argc == 1)
+				file_name = name;
+			else if(argc == 2)
+				file_name = argv[1];
+			else{
+				perror("File not found");
+				exit(1);
+			}
+
+			/* Save current board position in file */
 			fp = open_file(fp, file_name, "w+");
 			while(save_to_file < 8){
 				fprintf(fp, "%08x\n",chess_board.row[save_to_file]);
@@ -123,14 +129,16 @@ int main(int argc, char *argv[]){
 			save_to_file = 0;
 			fprintf(fp, "%s\n%d", name, white_turn);
 			fclose(fp);
+
 			printf("Game State Saved\n");
 		}
+
 		/* Get Value of initial block to move */
 		move.initial_row_val = get_row(move.initial_row, &chess_board);
 		initial_block_val = get_block(move.initial_col, move.initial_row_val);
 
 		/* Check whether right player is playin it */
-		if(!((initial_block_val >> 3) ^ (white_turn))){
+		if(initial_block_val != 0 && !((initial_block_val >> 3) ^ (white_turn))){
 			printf("\nYou need to supress urge of moving enemy pieces\n");
 			continue;
 		}

@@ -1,10 +1,10 @@
 #include "legal_moves.h"
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
+ * \brief Return SUCCESS when move is legal FAILED if otherwise
  *
- * param block_val value of a block on the board
- * param move struct keeping track of moves
+ * \param block_val value of a block on the board
+ * \param move struct keeping track of moves
  */
 
 bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *move, BOARD *chess_board){
@@ -162,7 +162,7 @@ bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_
 	return FAILED;
 }
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
+ * \brief Return SUCCESS when move is legal FAILED if otherwise
  * for Knight
  *
  * \param move struct keeping track of moves
@@ -177,10 +177,10 @@ bool knight_legal(MOVE *move){
 }
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
+ * \brief Return SUCCESS when move is legal FAILED if otherwise
  * for Bishop
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
  */
 bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
 	if(!(abs(final_col - initial_col) ^ (abs(final_row - initial_row))))
@@ -190,10 +190,10 @@ bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32
 }
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
+ * \brief Return SUCCESS when move is legal FAILED if otherwise
  * for Rook
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
  */
 bool rook_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
 	bool mov_row, mov_col;
@@ -206,10 +206,10 @@ bool rook_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t
 }
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
+ * \brief Return SUCCESS when move is legal FAILED if otherwise
  * for Queen
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
  */
 bool queen_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){
 	if(rook_legal(initial_row, final_row, initial_col, final_col) ^ bishop_legal(initial_row, final_row, initial_col, final_col))
@@ -219,10 +219,10 @@ bool queen_legal(char initial_row, char final_row, uint32_t initial_col, uint32_
 }
 
 /**
- * brief Return SUCCESS when move is legal FAILED if otherwise
+ * \brief Return SUCCESS when move is legal FAILED if otherwise
  * for King
  *
- * param move struct keeping track of moves
+ * \param move struct keeping track of moves
  */
 bool king_legal(MOVE *move){
 	if((abs(move->initial_col - move->final_col) <= 0x1) & (abs(move->initial_row - move->final_row) <= 0x1))
@@ -232,11 +232,11 @@ bool king_legal(MOVE *move){
 }
 
 /**
- * brief Checks whether the final block is of same color or different color 
+ * \brief Checks whether the final block is of same color or different color 
  * 	if it has same color move is illegal
  *	if it has different color then the piece can be elominated
- *
- * param final_block_val value of block where piece is being moved
+ * \param initial_block_val value of initial block
+ * \param final_block_val value of block where piece is being moved
  */
 bool legal_kill(uint8_t initial_block_val, uint8_t final_block_val){
 	if(is_killed(initial_block_val, final_block_val))
@@ -262,7 +262,7 @@ bool is_killed(uint8_t initial_block_val, uint8_t final_block_val){
 
 
 /**
- * brief SUCCESS if block is empty
+ * \brief SUCCESS if block is empty
  *
  */
 bool is_empty(uint8_t final_block_val){
@@ -272,6 +272,10 @@ bool is_empty(uint8_t final_block_val){
 		return FAILED;
 }
 
+/**
+ * \brief checks for blocking piece between final and initial position
+ * \prerequisites Legal_kill and pawn_legal should be implemented beforehand
+ */
 bool pawn_block(uint8_t final_block_val){
 	if(!is_empty(final_block_val))
 		return FAILED;
@@ -280,6 +284,10 @@ bool pawn_block(uint8_t final_block_val){
 bool knight_block(){
 	return SUCCESS;
 }
+/**
+ * \brief checks for blocking piece between final and initial position
+ * \prerequisites Legal_kill and bishop_legal should be implemented beforehand
+ */
 bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board){
 	bool piece_unblocked;
 	uint8_t block_val;
@@ -304,9 +312,8 @@ bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32
 	return SUCCESS;
 }
 /**
- * brief checks for blocking piece between final and initial position
- * prerequisites Legal_kill and rook_legal should be implemented beforehand
- *
+ * \brief checks for blocking piece between final and initial position
+ * \prerequisites Legal_kill and rook_legal should be implemented beforehand
  */
 bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board){
 	bool piece_unblocked;
@@ -345,7 +352,9 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	}
 	return SUCCESS;
 }
-
+/**
+* \brief cheks if there is a piece blocking queens path
+*/
 bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col,BOARD *chess_board){
 	if(rook_legal(initial_row, final_row, initial_col, final_col))
 		return rook_block(initial_row, final_row, initial_col, final_col, chess_board);
@@ -353,6 +362,10 @@ bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_
 		return bishop_block(initial_row, final_row, initial_col, final_col, chess_board);
 	return FAILED;
 }
+
+/**
+* \brief Detects whether king is in check
+*/
 bool king_check(){
 		
 	return SUCCESS;
