@@ -80,7 +80,7 @@ bool empty_legal(MOVE *move){
  * \param move struct keeping track of moves
  * \return SUCCESS when move is legal FAILED if otherwise
  */
-//RETURNS ONLY SUCCESS AS OF NOW
+//Does not handle enpassent and 2 steps in first move
 bool pawn_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
 	if(pawn_kill_legal(move, initial_block_val, final_block_val))
 		return SUCCESS;
@@ -351,9 +351,9 @@ bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_
 		return rook_block(initial_row, final_row, initial_col, final_col, chess_board);
 	else
 		return bishop_block(initial_row, final_row, initial_col, final_col, chess_board);
-	printf("Prerequisites might not have been satisfied");
 	return FAILED;
 }
 bool king_check(){
+		
 	return SUCCESS;
 }

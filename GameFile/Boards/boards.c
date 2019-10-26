@@ -14,7 +14,7 @@ void set_board_default(BOARD *chess_board){
  *\ brief Get a particular block of a chess BOARD
  *
  *\param row_val alphabet used to define value of row as 32-bit int
- *\param column_number number used to define corresponding column
+ *\param column_number number used to define corresponding column (takes value from 1-8)
  */
 
 uint8_t get_block(uint32_t column_number, uint32_t row_val){
