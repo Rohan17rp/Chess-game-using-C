@@ -3,23 +3,24 @@ MIS     : 111803161
 Name    : Rohan Pravin Patil
 
 INTRO:
-A basic implementation of 2-player chess engine
-White player being the one on Upper side denoted by UppperCase letters, Black would be in lower side as lowerCase letters
-Use make command from terminal for compiling and ./project <file_name> to run the code 
-Moves must be entered in format [a-h][1-8][a-h][1-8] which could be interpreted as [initial_row][initial_col][final_row][final_col]
-Use qq to quit game
-Use ss to save game
-Checking for pseudo legal moves have been completed 
+1. A basic implementation of 2-player chess engine
+2. White player being the one on Upper side denoted by UppperCase letters, Black would be in lower side as lowerCase letters
+3. Use make command from terminal for compiling and ./project <file_name> to run the code 
+4. Moves must be entered in format [a-h][1-8][a-h][1-8] which could be interpreted as [initial_row][initial_col][final_row][final_col]
+5. Use quit command to quit game
+6. Use save command to save game
+7. Checking for pseudo legal moves have been completed 
 
-BUGS:
-Check Detection and actions taken after it has not been done
-Game ends when you kill the enemy king
+ISSUES:
+1. Check Detection and actions taken after it has not been done
+2. Game ends when you kill the enemy king
 
 SAVE & LOAD GAME:
 Save a game to file and retrive game from a file implemented
 1. If the program is run without any arguments then the player name entered would be the name of file in which the game state would be saved
 2. If a file name is passed as argument then the file loads and game continues from previous save point
 3. If a given file name does not exist then respective error message is displayed
+4. The game doesn't provide any autosave feature so you need to manually save the game
 
 PIECES DENOTION:
 P - Pawn

@@ -13,7 +13,7 @@ BOARD chess_board;
 
 #ifndef MOVE_DEF
 #define MOVE_DEF
-typedef struct Move {
+typedef struct Move{
         char initial_row;
         char final_row;
         uint32_t initial_col;

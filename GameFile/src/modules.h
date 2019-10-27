@@ -6,6 +6,7 @@
 */
 #include "../UI/board_display.h"
 #include "../Typedef/headers.h"
+#include "../Typedef/typedef.h"
 #include "../Boards/boards.h"
 #include "../Pieces/pieces.h"
 #include "../Moves/moves.h"
@@ -15,3 +16,4 @@
 bool check_gameOver(uint8_t);
 FILE* open_file(FILE *fp, char *file_name, char *mode);
 char* get_file_name(int argc, char *argv[]);
+char getToken(MOVE *move);

@@ -7,7 +7,7 @@ int main(int argc, char *argv[]){
 	int save_to_file = 0;
 	uint32_t initial_column_number, final_column_number;
 	uint8_t initial_block_val, final_block_val;
-	char initial_row_alphabet, final_row_alphabet, color, name[20];
+	char initial_row_alphabet, final_row_alphabet, color, name[20], token;
 	bool check_mate, white_color, white_turn;
 	FILE *fp;
 
@@ -51,11 +51,7 @@ int main(int argc, char *argv[]){
 		while(1){
 			scanf("\n%s",name);
 			if(strlen(name) < 20){
-				printf("%s\n",name);
-				/* Create file with player name */
-				fp = open_file(fp, name, "w+");
-				fclose(fp);
-				printf("File created\n");
+				printf("Welcome %s\n",name);
 				break;
 			}
 			else
@@ -99,16 +95,18 @@ int main(int argc, char *argv[]){
 		else
 			printf("b->");
 
-		/* Take Move input from user */
-		scanf("\n%c%d%c%d", &move.initial_row, &move.initial_col, &move.final_row, &move.final_col);
+		/* Take input from user */
+		token = getToken(&move);
 
 		/* Quit Game */
-		if(move.initial_row == 'q'){
+		if(token == 'q'){
 			fclose(fp);
+			printf("Game successfully Exited\n");
 			return 0;
 		}
+
 		/* Save Game */
-		if(move.initial_row == 's'){
+		if(token == 's'){
 			/* Get the name of file to save to */
 			char *file_name;
 			if(argc == 1)
@@ -132,38 +130,39 @@ int main(int argc, char *argv[]){
 
 			printf("Game State Saved\n");
 		}
+		if(token == 'm'){
+			/* Get Value of initial block to move */
+			move.initial_row_val = get_row(move.initial_row, &chess_board);
+			initial_block_val = get_block(move.initial_col, move.initial_row_val);
 
-		/* Get Value of initial block to move */
-		move.initial_row_val = get_row(move.initial_row, &chess_board);
-		initial_block_val = get_block(move.initial_col, move.initial_row_val);
+			/* Check whether right player is playin it */
+			if(initial_block_val != 0 && !((initial_block_val >> 3) ^ (white_turn))){
+				printf("\nYou need to supress urge of moving enemy pieces\n");
+				continue;
+			}
 
-		/* Check whether right player is playin it */
-		if(initial_block_val != 0 && !((initial_block_val >> 3) ^ (white_turn))){
-			printf("\nYou need to supress urge of moving enemy pieces\n");
-			continue;
-		}
+			/* Get Value of Final block where piece is to be moved */
+			move.final_row_val = get_row(move.final_row, &chess_board);
+			final_block_val = get_block(move.final_col, move.final_row_val);
 
-		/* Get Value of Final block where piece is to be moved */
-		move.final_row_val = get_row(move.final_row, &chess_board);
-		final_block_val = get_block(move.final_col, move.final_row_val);
+			/* Check For Legal Move */
+			if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
+				if(move_piece(&move, &chess_board)){
+					printf("Legal Move\n");
+					/* change turn to opponent in case of legal move */
+					white_turn = !white_turn;
+					/* display the move made on UI */
+					change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
 
-		/* Check For Legal Move */
-		if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
-			if(move_piece(&move, &chess_board)){
-				printf("Legal Move\n");
-				/* change turn to opponent in case of legal move */
-				white_turn = !white_turn;
-				/* display the move made on UI */
-				change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
-
-				check_mate = check_gameOver(final_block_val);
+					check_mate = check_gameOver(final_block_val);
+				}
+				else{
+					printf("Illegal Move\n");
+				}
 			}
 			else{
 				printf("Illegal Move\n");
 			}
-		}
-		else{
-			printf("Illegal Move\n");
 		}
 	}
 	return 0;
@@ -180,7 +179,12 @@ bool check_gameOver(uint8_t final_block_val){
 	}
 	return false;
 }
-
+/**
+* \brief opens file and exits if file not opened
+* \params fp file_pointer
+* \params file_name gets name of file
+* \params mode file should be opened in this mode
+*/
 FILE* open_file(FILE *fp, char *file_name, char *mode){
 	fp = fopen(file_name, mode);
 	if(fp == NULL){
@@ -189,4 +193,24 @@ FILE* open_file(FILE *fp, char *file_name, char *mode){
 	}
 	return fp;
 }
-
+/** 
+* \brief takes input string from user for move-making, saving and quit-game
+*
+* \params move initial and final move values
+*/
+char getToken(MOVE *move){
+	char token[10];
+	scanf("%s",token);
+	if(!strcmp(token, "quit")){
+		return 'q';
+	}
+	if(!strcmp(token, "save")){
+		return 's';
+	}
+	printf("Move\n");
+	move->initial_row = token[0];
+	move->initial_col = atoi(&token[1]);
+	move->final_row = token[2];
+	move->final_col = atoi(&token[3]);
+	return 'm';
+}
