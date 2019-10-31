@@ -21,6 +21,8 @@ Save a game to file and retrive game from a file implemented
 2. If a file name is passed as argument then the file loads and game continues from previous save point
 3. If a given file name does not exist then respective error message is displayed
 4. The game doesn't provide any autosave feature so you need to manually save the game
+5. All Saved games are stored in a Saved_files directory
+6. If you try to save again using same name then, existing file would be over-written
 
 PIECES DENOTION:
 P - Pawn

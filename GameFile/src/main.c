@@ -63,15 +63,13 @@ int main(int argc, char *argv[]){
 	/* If argument is given then open the file to continue game */
 	else if(argc == 2){
 		/* Load Game */
-
 		int count = 0;
+		printf("File loaded %s\n", argv[1]);	
 		/* Display saved game */
 		fp = open_file(fp, argv[1], "rw");
-
 		/* Display saved board */
 		display_saved_board(display_board, fp);
 		fclose(fp);
-
 		/* Load values from file to respective variables */
 		fp = open_file(fp, argv[1], "rw");
 		while(count < 8 && fscanf(fp, "%x",&chess_board.row[count++]));	
@@ -100,7 +98,6 @@ int main(int argc, char *argv[]){
 
 		/* Quit Game */
 		if(token == 'q'){
-			fclose(fp);
 			printf("Game successfully Exited\n");
 			return 0;
 		}
@@ -180,24 +177,28 @@ bool check_gameOver(uint8_t final_block_val){
 	return false;
 }
 /**
-* \brief opens file and exits if file not opened
-* \params fp file_pointer
-* \params file_name gets name of file
-* \params mode file should be opened in this mode
-*/
+ * \brief opens file in Saved_files directory or exits if file not opened
+ * \params fp file_pointer
+ * \params file_name gets name of file
+ * \params mode file should be opened in this mode
+ */
 FILE* open_file(FILE *fp, char *file_name, char *mode){
-	fp = fopen(file_name, mode);
+	char path[] = "Saved_files/";
+	char name[20];
+	int i = 0;
+	strcpy(name, file_name);
+	strcat(path, name);	
+	fp = fopen(path, mode);
 	if(fp == NULL){
-		perror("File Not Opened");
-		exit(0);
+		perror("File Not Opened\nPlease check for permissions and try again");
 	}
 	return fp;
 }
 /** 
-* \brief takes input string from user for move-making, saving and quit-game
-*
-* \params move initial and final move values
-*/
+ * \brief takes input string from user for move-making, saving and quit-game
+ *
+ * \params move initial and final move values
+ */
 char getToken(MOVE *move){
 	char token[10];
 	scanf("%s",token);
