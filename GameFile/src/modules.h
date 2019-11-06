@@ -12,6 +12,7 @@
 #include "../Moves/moves.h"
 #include "../Legal_Moves/legal_moves.h"
 #include "../UI/ui.h"
+#include "../Boards/attack_bit_boards.h"
 
 bool check_gameOver(uint8_t);
 FILE* open_file(FILE *fp, char *file_name, char *mode);

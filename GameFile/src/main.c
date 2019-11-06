@@ -1,6 +1,7 @@
 #include "modules.h"
 
 //print_hex_board(&chess_board);//This command works and prints board in form of hex values
+void get_user_name(bool color, bool turn, char *name);
 int main(int argc, char *argv[]){
 
 	/* Variable Declarations */
@@ -12,6 +13,7 @@ int main(int argc, char *argv[]){
 	FILE *fp;
 	char white_king_row = 'a', black_king_row = 'h';
 	int white_king_col = 4, black_king_col = 4;
+	CHESS_PIECE *pieces;
 
 	/* Variable Initialization */
 	check_mate = false;
@@ -84,11 +86,12 @@ int main(int argc, char *argv[]){
 	/* Play game */
 	while(!check_mate){
 
-		/* Printing Whose turn is it */		
-		if(white_turn)
-			printf("w-> %s's turn\n",name);
-		else
-			printf("b->");
+		/* Printing Whose turn is it */	
+		get_user_name(white_color, white_turn, name);
+//		if(white_turn)
+//			printf("w-> %s's turn\n",name);
+//		else
+//			printf("b->");
 
 		/* Take input from user */
 		token = getToken(&move);
@@ -141,6 +144,20 @@ int main(int argc, char *argv[]){
 
 			/* Check For Legal Move */
 			if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
+				/* Gets position of pieces by their values */
+				pieces = get_position_bitboards(&chess_board, pieces);
+//					printf(" pieces->WHITE_PAWN  -> %016lx\n", pieces->WHITE_PAWN);
+//					printf(" pieces->WHITE_ROOK  -> %016lx\n", pieces->WHITE_ROOK);
+//					printf(" pieces->WHITE_KNIGHT-> %016lx\n", pieces->WHITE_KNIGHT);
+//					printf(" pieces->WHITE_BISHOP-> %016lx\n", pieces->WHITE_BISHOP);
+//					printf(" pieces->WHITE_QUEEN -> %016lx\n", pieces->WHITE_QUEEN);
+//					printf(" pieces->WHITE_KING  -> %016lx\n", pieces->WHITE_KING);
+//					printf(" pieces->BLACK_PAWN  -> %016lx\n", pieces->BLACK_PAWN);
+//					printf(" pieces->BLACK_ROOK  -> %016lx\n", pieces->BLACK_ROOK);
+//					printf(" pieces->BLACK_KNIGHT-> %016lx\n", pieces->BLACK_KNIGHT);
+//					printf(" pieces->BLACK_BISHOP-> %016lx\n", pieces->BLACK_BISHOP);
+//					printf(" pieces->BLACK_QUEEN -> %016lx\n", pieces->BLACK_QUEEN);
+//					printf(" pieces->BLACK_KING  -> %016lx\n", pieces->BLACK_KING);
 				BOARD temp;
 				temp = chess_board;
 				if(initial_block_val == 0x6){
@@ -187,6 +204,24 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
+void get_user_name(bool color, bool white_turn, char *name){
+	if(color){
+		if(white_turn)
+			printf("w-> %s's turn\n",name);
+		else
+			printf("b->");
+	}
+	else{
+		if(!white_turn)
+			printf("b-> %s's turn\n",name);
+		else
+			printf("w->");
+	}
+}
+
+/**
+* \breief if the king is killed then game_over
+*/
 bool check_gameOver(uint8_t final_block_val){
 	if(final_block_val == 0x06){
 		printf("Black Wins\n");

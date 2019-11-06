@@ -10,9 +10,10 @@ INTRO:
 5. Use quit command to quit game
 6. Use save command to save game
 7. Checking for pseudo legal moves have been completed 
+8. Check detection has been done
 
 ISSUES:
-1. Check Detection and actions taken after it has not been done
+1. Check Mate Detection and actions taken after it has not been done
 2. Game ends when you kill the enemy king
 3. En-passen, Castling and Pawn promotion not handled
 

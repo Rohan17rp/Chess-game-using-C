@@ -1,4 +1,5 @@
 #include "boards.h"
+#include "../Pieces/pieces.h"
 
 void set_board_default(BOARD *chess_board){ 
 	chess_board->row[0] = 0x42365324;
