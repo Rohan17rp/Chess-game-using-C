@@ -10,14 +10,8 @@ int main(int argc, char *argv[]){
 	char initial_row_alphabet, final_row_alphabet, color, name[20], token;
 	bool check_mate, white_color, white_turn;
 	FILE *fp;
-
-	/* Almost useless as of now */
-	typedef struct king_piece{
-		char king_row_alphabet;
-		uint32_t king_column_number;
-	}KING;
-
-	KING black_king, white_king;
+	char white_king_row = 'a', black_king_row = 'h';
+	int white_king_col = 4, black_king_col = 4;
 
 	/* Variable Initialization */
 	check_mate = false;
@@ -64,9 +58,12 @@ int main(int argc, char *argv[]){
 	else if(argc == 2){
 		/* Load Game */
 		int count = 0;
-		printf("File loaded %s\n", argv[1]);	
+		printf("Trying to load file '%s'\n", argv[1]);	
 		/* Display saved game */
 		fp = open_file(fp, argv[1], "rw");
+		if(fp == NULL){
+			exit(1);
+		}
 		/* Display saved board */
 		display_saved_board(display_board, fp);
 		fclose(fp);
@@ -144,19 +141,44 @@ int main(int argc, char *argv[]){
 
 			/* Check For Legal Move */
 			if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
+				BOARD temp;
+				temp = chess_board;
+				if(initial_block_val == 0x6){
+					white_king_row = move.final_row;
+					white_king_col = move.final_col;
+				}
+				else if(initial_block_val == 0xE){
+					black_king_row = move.final_row;
+					black_king_col = move.final_col;
+				}
 				if(move_piece(&move, &chess_board)){
-					printf("Legal Move\n");
-					/* change turn to opponent in case of legal move */
-					white_turn = !white_turn;
-					/* display the move made on UI */
-					change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
+					/* check if it is black turn and if king is in check */
+					if(!white_turn && king_check(black_king_row, black_king_col, &chess_board)){
+						chess_board = temp;
+						printf("black king is in check\n");
+					}
+					/* check if it is white turn and if king is in check */
+					else if(white_turn && king_check(white_king_row, white_king_col, &chess_board)){
+						chess_board = temp;
+						printf("white king is in check\n");
+					}
+					/* If king is not in check proceed normally */
+					else{
+						change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
+						printf("Legal Move\n");
 
-					check_mate = check_gameOver(final_block_val);
+
+						/* change turn to opponent in case of legal move */
+						white_turn = !white_turn;
+						/* display the move made on UI */
+						check_mate = check_gameOver(final_block_val);
+					}	
 				}
 				else{
 					printf("Illegal Move\n");
 				}
 			}
+
 			else{
 				printf("Illegal Move\n");
 			}
@@ -190,7 +212,7 @@ FILE* open_file(FILE *fp, char *file_name, char *mode){
 	strcat(path, name);	
 	fp = fopen(path, mode);
 	if(fp == NULL){
-		perror("File Not Opened\nPlease check for permissions and try again");
+		perror("File Not Opened ");
 	}
 	return fp;
 }

@@ -12,7 +12,7 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 		bool legal;
 		switch(block_val_initial){
 			case 0:
-				printf("Can't move an empty block\n");
+			//	printf("Can't move an empty block\n");
 				legal = empty_legal(move);
 				break;
 			case 1:
@@ -21,7 +21,7 @@ bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *
 				legal = pawn_legal(move, block_val_initial, block_val_final);
 				if(!legal){
 					legal = pawn_first_move_legal(move, block_val_initial, block_val_final, chess_board);
-					}
+				}
 				break;
 			case 2:
 			case 10:
@@ -96,14 +96,14 @@ bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
 	if(final_block_val){
 		if(initial_block_val >> 3){
 			if((abs(move->final_col - move->initial_col) == 1) && ((move->initial_row - move->final_row) == 1)){
-				if(legal_kill(initial_block_val, final_block_val))
-					return SUCCESS;
+				//				if(legal_kill(initial_block_val, final_block_val))
+				return SUCCESS;
 			}
 		}
 		else{
 
 			if((abs(move->final_col - move->initial_col) == 1) && ((move->final_row - move->initial_row) == 1)){
-				if(legal_kill(initial_block_val, final_block_val));
+				//				if(legal_kill(initial_block_val, final_block_val));
 				return SUCCESS;
 			}
 		}
@@ -144,7 +144,7 @@ bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_
 	/* white pawn first move */
 	if(move->initial_row == 'b'){
 		if(move->final_row == 'd'){
-		mid_block_val = get_block(move->initial_col, get_row('c', chess_board)); 
+			mid_block_val = get_block(move->initial_col, get_row('c', chess_board)); 
 			if(is_empty(mid_block_val) && is_empty(final_block_val)){
 				return SUCCESS;
 			}
@@ -153,7 +153,7 @@ bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_
 	/* Black pawn first move */
 	if(move->initial_row == 'g'){
 		if(move->final_row == 'e'){
-		mid_block_val = get_block(move->initial_col, get_row('f', chess_board)); 
+			mid_block_val = get_block(move->initial_col, get_row('f', chess_board)); 
 			if(is_empty(mid_block_val) && is_empty(final_block_val)){
 				return SUCCESS;
 			}
@@ -161,6 +161,55 @@ bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_
 	}
 	return FAILED;
 }
+/**
+ * \brief checks for promotion of pawn
+ * \prerequisite legal move must be checked
+ */
+int pawn_promotion(MOVE *move, uint8_t initial_block_val, char choice, BOARD *chess_board){
+	int block_val;
+	bool correct_choice = false;
+	if(move->final_row == 'h' || move->final_row == 'a'){
+		while(!correct_choice){
+			if(initial_block_val >> 3){
+				correct_choice = true;
+				switch(choice){
+					case 'n': block_val = 10;
+						  break;
+					case 'b': block_val = 11;
+						  break;
+					case 'r': block_val = 12;
+						  break;
+					case 'q': block_val = 13;
+						  break;
+					default: 
+						  printf("Incorrect value %c\nEnter a valid input\n", choice);
+						  correct_choice = false;
+						  break;
+				}
+			}
+			else{
+				printf("What do you want your pawn to be promoted to\nQ - Queen\nR - Rook\nB - Bishop\nN - Knight\n");
+				correct_choice = true;
+				switch(choice){
+					case 'N': block_val = 2;
+						  break;
+					case 'B': block_val = 3;
+						  break;
+					case 'R': block_val = 4;
+						  break;
+					case 'Q': block_val = 5;
+						  break;
+					default: 
+						  printf("Incorrect value %c\nEnter a valid input\n",choice);
+						  correct_choice = false;
+						  break;
+				}
+			}
+		}	
+	}
+	return block_val;
+}
+
 /**
  * \brief Return SUCCESS when move is legal FAILED if otherwise
  * for Knight
@@ -244,7 +293,7 @@ bool legal_kill(uint8_t initial_block_val, uint8_t final_block_val){
 	else if(is_empty(final_block_val))
 		return SUCCESS;
 	else{ 
-		printf("Can't Kill Your Own Piece\n");
+//		printf("Can't Kill Your Own Piece\n");
 		return FAILED;
 	}
 }
@@ -353,8 +402,8 @@ bool rook_block(char initial_row, char final_row, uint32_t initial_col, uint32_t
 	return SUCCESS;
 }
 /**
-* \brief cheks if there is a piece blocking queens path
-*/
+ * \brief cheks if there is a piece blocking queens path
+ */
 bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col,BOARD *chess_board){
 	if(rook_legal(initial_row, final_row, initial_col, final_col))
 		return rook_block(initial_row, final_row, initial_col, final_col, chess_board);
@@ -364,9 +413,31 @@ bool queen_block(char initial_row, char final_row, uint32_t initial_col, uint32_
 }
 
 /**
-* \brief Detects whether king is in check
-*/
-bool king_check(){
-		
-	return SUCCESS;
+ * \brief Detects whether king is in check
+ */
+bool king_check(char king_row, uint32_t king_col, BOARD *chess_board){
+	char initial_row = 'a';
+	uint32_t initial_col = 1;
+	uint8_t block_val_initial, block_val_final;
+	block_val_final = get_block(king_col, get_row(king_row, chess_board));
+	MOVE move;
+	move.initial_row = initial_row;
+	move.initial_col = initial_col;
+	move.final_row = king_row;
+	move.final_col = king_col;
+	while(move.initial_row < 'i'){
+		while(move.initial_col < 9){
+			move.initial_row_val = get_row(move.initial_row, chess_board);
+			move.final_row_val = get_row(move.final_row, chess_board);
+			block_val_initial = get_block(move.initial_col, move.initial_row_val);
+			if(legal_move_check(block_val_initial, block_val_final, &move, chess_board)){
+				printf("King is in check\n");
+				return SUCCESS;
+			}
+			move.initial_col++;
+		}
+		move.initial_col = 1;
+		move.initial_row++;
+	}
+	return FAILED;
 }

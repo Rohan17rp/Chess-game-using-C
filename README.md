@@ -14,6 +14,7 @@ INTRO:
 ISSUES:
 1. Check Detection and actions taken after it has not been done
 2. Game ends when you kill the enemy king
+3. En-passen, Castling and Pawn promotion not handled
 
 SAVE & LOAD GAME:
 Save a game to file and retrive game from a file implemented

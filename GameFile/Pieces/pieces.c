@@ -25,23 +25,41 @@ void identify_piece(){
 		case 0x1:
 			printf("The Block is Pawn");
 			break;
+		case 0x9:
+			printf("The Block is Black_pawn");
+			break;
 		case 0x2:
+			printf("The Block is Knight");
+			break;
+		case 0xA:
 			printf("The Block is Knight");
 			break;
 		case 0x3:
 			printf("The Block is Bishop");
 			break;
+		case 0xB:
+			printf("The Block is Bishop");
+			break;
 		case 0x4:
+			printf("The Block is Rook");
+			break;
+		case 0xC:
 			printf("The Block is Rook");
 			break;
 		case 0x5:
 			printf("The Block is Queen");
 			break;
+		case 0xD:
+			printf("The Block is Queen");
+			break;
 		case 0x6:
 			printf("The Block is King");
 			break;
+		case 0xE:
+			printf("The Block is King");
+			break;
 		default:
-			printf("Piece error");
+			printf("File Might be Corrupted\n");
 			break;
 	}
 }

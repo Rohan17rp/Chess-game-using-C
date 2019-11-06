@@ -4,7 +4,21 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ATTACK_BIT_BOARDS	Boards/attack_bit_boards.c	2;"	d	file:
 BISHOP	Pieces/pieces.c	8;"	d	file:
+BLACK_BISHOP	Boards/attack_bit_boards.c	/^	uint64_t BLACK_BISHOP;$/;"	m	struct:pieces	file:
+BLACK_BISHOP	Pieces/pieces.h	9;"	d
+BLACK_KING	Boards/attack_bit_boards.c	/^	uint64_t BLACK_KING;$/;"	m	struct:pieces	file:
+BLACK_KING	Pieces/pieces.h	6;"	d
+BLACK_KNIGHT	Boards/attack_bit_boards.c	/^	uint64_t BLACK_KNIGHT;$/;"	m	struct:pieces	file:
+BLACK_KNIGHT	Pieces/pieces.h	10;"	d
+BLACK_PAWN	Boards/attack_bit_boards.c	/^	uint64_t BLACK_PAWN;$/;"	m	struct:pieces	file:
+BLACK_PAWN	Pieces/pieces.h	11;"	d
+BLACK_QUEEN	Boards/attack_bit_boards.c	/^	uint64_t BLACK_QUEEN;$/;"	m	struct:pieces	file:
+BLACK_QUEEN	Pieces/pieces.h	7;"	d
+BLACK_ROOK	Boards/attack_bit_boards.c	/^	uint64_t BLACK_ROOK;$/;"	m	struct:pieces	file:
+BLACK_ROOK	Pieces/pieces.h	8;"	d
+BLANK_SPACE	Boards/attack_bit_boards.c	/^	uint64_t BLANK_SPACE;$/;"	m	struct:pieces	file:
 BLOCK	Pieces/pieces.c	14;"	d	file:
 BOARD	Typedef/typedef.h	/^}BOARD;$/;"	t	typeref:struct:board
 BOARD_DEF	Typedef/typedef.h	7;"	d
@@ -19,27 +33,47 @@ KING	Pieces/pieces.c	11;"	d	file:
 KNIGHT	Pieces/pieces.c	7;"	d	file:
 MOVE	Typedef/typedef.h	/^}MOVE;$/;"	t	typeref:struct:Move
 MOVE_DEF	Typedef/typedef.h	15;"	d
-Move	Typedef/typedef.h	/^typedef struct Move {$/;"	s
+Move	Typedef/typedef.h	/^typedef struct Move{$/;"	s
 PAWN	Pieces/pieces.c	6;"	d	file:
+PIECES	Boards/attack_bit_boards.c	/^}PIECES;$/;"	t	typeref:struct:pieces	file:
 QUEEN	Pieces/pieces.c	10;"	d	file:
 ROOK	Pieces/pieces.c	9;"	d	file:
 ROW_SPAN	Alpha-Beta Pruning/modules.h	1;"	d
 ROW_SPAN	Typedef/typedef.h	1;"	d
 SUCCESS	Alpha-Beta Pruning/modules.h	3;"	d
 SUCCESS	Typedef/typedef.h	3;"	d
+WHITE_BISHOP	Boards/attack_bit_boards.c	/^	uint64_t WHITE_BISHOP;$/;"	m	struct:pieces	file:
+WHITE_BISHOP	Pieces/pieces.h	17;"	d
+WHITE_KING	Boards/attack_bit_boards.c	/^	uint64_t WHITE_KING;$/;"	m	struct:pieces	file:
+WHITE_KING	Pieces/pieces.h	14;"	d
+WHITE_KNIGHT	Boards/attack_bit_boards.c	/^	uint64_t WHITE_KNIGHT;$/;"	m	struct:pieces	file:
+WHITE_KNIGHT	Pieces/pieces.h	18;"	d
+WHITE_PAWN	Boards/attack_bit_boards.c	/^	uint64_t WHITE_PAWN;$/;"	m	struct:pieces	file:
+WHITE_PAWN	Pieces/pieces.h	19;"	d
+WHITE_QUEEN	Boards/attack_bit_boards.c	/^	uint64_t WHITE_QUEEN;$/;"	m	struct:pieces	file:
+WHITE_QUEEN	Pieces/pieces.h	15;"	d
+WHITE_ROOK	Boards/attack_bit_boards.c	/^	uint64_t WHITE_ROOK;$/;"	m	struct:pieces	file:
+WHITE_ROOK	Pieces/pieces.h	16;"	d
 bishop_block	Legal_Moves/legal_moves.c	/^bool bishop_block(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col, BOARD *chess_board){$/;"	f
 bishop_legal	Legal_Moves/legal_moves.c	/^bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){$/;"	f
+bitboard_init	Boards/attack_bit_boards.c	/^void bitboard_init(PIECES *piece){$/;"	f
 board	Typedef/typedef.h	/^typedef struct board{$/;"	s
+calculate_all	Boards/attack_bit_boards.c	/^void calculate_all(){$/;"	f
+calculate_all_possible_moves	1player/calculate_pins.c	/^ void calculate_all_possible_moves(BOARD *chess_board){$/;"	f
 change_move	UI/ui.c	/^void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_t final_col, uint8_t block_val, char display_board[37][58]){$/;"	f
+check_gameOver	src/main.c	/^bool check_gameOver(uint8_t final_block_val){$/;"	f
 chess_board	Typedef/typedef.h	/^BOARD chess_board;$/;"	v
 display_board	UI/board_display.c	/^char display_board[37][58] = { $/;"	v
 display_board_set_default	UI/ui.c	/^void display_board_set_default(char display_board[37][58]){$/;"	f
+display_saved_board	UI/ui.c	/^void display_saved_board(char display_board[37][58], FILE *fp){$/;"	f
 empty_legal	Legal_Moves/legal_moves.c	/^bool empty_legal(MOVE *move){$/;"	f
 erase_block_val	Moves/moves.c	/^uint32_t erase_block_val(char row_alpha, uint8_t col_no, BOARD *chess_board){$/;"	f
 final_col	Typedef/typedef.h	/^        uint32_t final_col;$/;"	m	struct:Move
 final_row	Typedef/typedef.h	/^        char final_row;$/;"	m	struct:Move
 final_row_val	Typedef/typedef.h	/^        uint32_t final_row_val;$/;"	m	struct:Move
+getToken	src/main.c	/^char getToken(MOVE *move){$/;"	f
 get_block	Boards/boards.c	/^uint8_t get_block(uint32_t column_number, uint32_t row_val){$/;"	f
+get_position_bitboards	Boards/attack_bit_boards.c	/^void get_position_bitboards(BOARD *chess_board, PIECES *piece){$/;"	f
 get_row	Boards/boards.c	/^uint32_t get_row(char row_alphabet, BOARD *chess_board){$/;"	f
 identify_piece	Pieces/pieces.c	/^void identify_piece(){$/;"	f
 initial_col	Typedef/typedef.h	/^        uint32_t initial_col;$/;"	m	struct:Move
@@ -47,21 +81,25 @@ initial_row	Typedef/typedef.h	/^        char initial_row;$/;"	m	struct:Move
 initial_row_val	Typedef/typedef.h	/^        uint32_t initial_row_val;$/;"	m	struct:Move
 is_empty	Legal_Moves/legal_moves.c	/^bool is_empty(uint8_t final_block_val){$/;"	f
 is_killed	Legal_Moves/legal_moves.c	/^bool is_killed(uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
-king_check	Legal_Moves/legal_moves.c	/^bool king_check(){$/;"	f
+king_check	Legal_Moves/legal_moves.c	/^bool king_check(char initial_row, uint32_t initial_col, BOARD *chess_board){$/;"	f
 king_legal	Legal_Moves/legal_moves.c	/^bool king_legal(MOVE *move){$/;"	f
 knight_block	Legal_Moves/legal_moves.c	/^bool knight_block(){$/;"	f
 knight_legal	Legal_Moves/legal_moves.c	/^bool knight_legal(MOVE *move){$/;"	f
 legal_kill	Legal_Moves/legal_moves.c	/^bool legal_kill(uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 legal_move_check	Legal_Moves/legal_moves.c	/^bool legal_move_check(uint8_t block_val_initial, uint8_t block_val_final, MOVE *move, BOARD *chess_board){$/;"	f
+main	Boards/attack_bit_boards.c	/^int main(){$/;"	f
 main	process.c	/^int main(){$/;"	f
-main	src/main.c	/^int main(){$/;"	f
+main	src/main.c	/^int main(int argc, char *argv[]){$/;"	f
 move	Typedef/typedef.h	/^MOVE move;$/;"	v
 move_piece	Moves/moves.c	/^uint8_t move_piece(MOVE *move, BOARD *chess_board){$/;"	f
+open_file	src/main.c	/^FILE* open_file(FILE *fp, char *file_name, char *mode){$/;"	f
 pawn_block	Legal_Moves/legal_moves.c	/^bool pawn_block(uint8_t final_block_val){$/;"	f
 pawn_first_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val, BOARD *chess_board){$/;"	f
 pawn_kill_legal	Legal_Moves/legal_moves.c	/^bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_legal	Legal_Moves/legal_moves.c	/^bool pawn_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
 pawn_move_legal	Legal_Moves/legal_moves.c	/^bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){$/;"	f
+pawn_promotion	Legal_Moves/legal_moves.c	/^int pawn_promotion(MOVE *move, uint8_t initial_block_val, BOARD *chess_board){$/;"	f
+pieces	Boards/attack_bit_boards.c	/^typedef struct pieces{$/;"	s	file:
 print_board	UI/ui.c	/^void print_board(char board){$/;"	f
 print_hex_board	Boards/boards.c	/^ void print_hex_board(BOARD *chess_board){$/;"	f
 put_block_value_to_designated_block	Moves/moves.c	/^void put_block_value_to_designated_block(char row_alpha, uint8_t col_no, uint8_t block_val, BOARD *chess_board){$/;"	f
