@@ -18,3 +18,4 @@ bool check_gameOver(uint8_t);
 FILE* open_file(FILE *fp, char *file_name, char *mode);
 char* get_file_name(int argc, char *argv[]);
 char getToken(MOVE *move);
+void get_user_name(bool color, bool turn, char *name);

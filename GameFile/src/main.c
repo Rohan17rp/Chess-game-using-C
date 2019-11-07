@@ -1,7 +1,6 @@
 #include "modules.h"
 
 //print_hex_board(&chess_board);//This command works and prints board in form of hex values
-void get_user_name(bool color, bool turn, char *name);
 int main(int argc, char *argv[]){
 
 	/* Variable Declarations */
@@ -12,7 +11,7 @@ int main(int argc, char *argv[]){
 	bool check_mate, white_color, white_turn;
 	FILE *fp;
 	char white_king_row = 'a', black_king_row = 'h';
-	int white_king_col = 4, black_king_col = 4;
+	int white_king_col = 4, black_king_col = 4, mode;
 	CHESS_PIECE *pieces;
 
 	/* Variable Initialization */
@@ -24,6 +23,25 @@ int main(int argc, char *argv[]){
 
 	/* If no argument is given then open a new file */
 	if(argc == 1){
+		printf("1. To open save game\n");
+                printf("2. To start a new two player game\n");
+                printf("3. To start a new one player game\n");
+		printf("4. Help\n");
+		printf("5. View Saved Files\n");
+		printf("6. Delete Saved file\n");
+                printf("7. Exit\n");
+                scanf("%d", &mode);
+		if(mode == 1){
+			printf("Enter File name\n");
+
+		}
+		else if(mode == 7){
+			exit(1);
+		}
+		else{
+			printf("INVALID mode Exiting file\n");
+			exit(1);
+		}
 		/* Choose Player color
 		 * Though useless now might come in handy later
 		 */

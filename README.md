@@ -4,7 +4,8 @@ Name    : Rohan Pravin Patil
 
 INTRO:
 1. A basic implementation of 2-player chess engine
-2. White player being the one on Upper side denoted by UppperCase letters, Black would be in lower side as lowerCase letters
+2. White player being the one on Upper side denoted by UppperCase letters in yellow color,
+	Black would be in lower side as lowerCase letters in green color
 3. Use make command from terminal for compiling and ./project <file_name> to run the code 
 4. Moves must be entered in format [a-h][1-8][a-h][1-8] which could be interpreted as [initial_row][initial_col][final_row][final_col]
 5. Use quit command to quit game
@@ -39,10 +40,9 @@ Use ctrl and '-' keys together to shrink the terminal screen for better View if 
 Press ctrl, shift an '+' key together to expand screen back again
 
 Future Tasks :-
-1. Get Legal Moves (including legal moves after check)
+1. Get Legal Moves (including legal moves after check mate)
 2. Make attack bitboards or some other way of calculating pins
 3. Loop attack possibilities till time taken is not much
 4. Test it against custom inputs and correct errors if any
-5. Convert characters used as denotion to something more easy to understand (confusion in pawn piece occurs currently as 'p' and 'P' look similar on board)
-6. Try to improve time taken by bot for each move
-7. If time permits switch code to Glade
+5. Try to improve time taken by bot for each move
+6. If time permits switch code to Glade

@@ -1,10 +1,23 @@
 #include "ui.h"
 #include "../Pieces/pieces.h"
+void red(){
+	printf("\033[0;31m");
+}
+void green(){
+	printf("\033[1;32m");
+}
+void yellow(){
+	printf("\033[1;33m");
+}
+
+void reset(){
+	printf("\033[0m");
+}
 void display_board_set_default(char display_board[37][58]){
 	int i, j;
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
-			printf("%c",display_board[i][j]);
+			color(display_board[i][j], i, j);
 		}
 		printf("\n");
 	}
@@ -67,9 +80,10 @@ void display_saved_board(char display_board[37][58], FILE *fp){
 	}
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
-			printf("%c",display_board[i][j]);
+			//	printf("%c",display_board[i][j]);
+			color(display_board[i][j], i, j);
 		}
-		printf("\n");
+			printf("\n");
 	}
 }
 void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_t final_col, uint8_t block_val, char display_board[37][58]){
@@ -122,12 +136,12 @@ void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_
 	display_board[5 + (row_num_final * 4)][3 + (final_col * 6)] = piece_notation;
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
-			printf("%c",display_board[i][j]);
+			//		printf("%c",display_board[i][j]);
+			color(display_board[i][j], i, j);
 		}
-		printf("\n");
+			printf("\n");
 	}
 }
-
 void print_board(char board){
 	int i, j;
 	for(i = 0; i < 37; i++){
@@ -136,4 +150,20 @@ void print_board(char board){
 		}
 		printf("\n");
 	}
+}
+
+void color(char display, int i, int j){ 
+	if(isalpha(display)){
+		if(islower(display) && j > 3){
+			green();		
+		}
+		else if(j > 3){
+			yellow();
+		}
+	}
+	else if(!isdigit(display)){
+		red();
+	}
+	printf("%c",display);
+	reset();
 }

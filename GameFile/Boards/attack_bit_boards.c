@@ -171,7 +171,7 @@ CHESS_PIECE *move_bitboard(MOVE move, BOARD chess_board, CHESS_PIECE *move_bit_b
 						break;
 				}
 				move_bit_board_val |= (1ul << pos);
-				printf("%d\t%c\n%d\t%c\n%d\n", move.initial_col, move.initial_row, move.final_col, move.final_row, pos);
+		//		printf("%d\t%c\n%d\t%c\n%d\n", move.initial_col, move.initial_row, move.final_col, move.final_row, pos);
 			}
 			move.final_col++;
 		}

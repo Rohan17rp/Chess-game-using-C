@@ -439,7 +439,7 @@ bool king_check(char king_row, uint32_t king_col, BOARD *chess_board){
 			move.initial_row_val = get_row(move.initial_row, chess_board);
 			move.final_row_val = get_row(move.final_row, chess_board);
 			block_val_initial = get_block(move.initial_col, move.initial_row_val);
-			printf("%d\t%c\n", move.initial_col, move.initial_row);
+//			printf("%d\t%c\n", move.initial_col, move.initial_row);
 
 			move_bit_board = move_bitboard(move, *chess_board, move_bit_board);
 
@@ -453,17 +453,17 @@ bool king_check(char king_row, uint32_t king_col, BOARD *chess_board){
 		move.initial_col = 1;
 		move.initial_row++;
 	}
-	printf(" attack_bit_board->WHITE_PAWN  -> %016lx\n", move_bit_board->WHITE_PAWN);
-	printf(" attack_bit_board->WHITE_ROOK  -> %016lx\n", move_bit_board->WHITE_ROOK);
-	printf(" attack_bit_board->WHITE_KNIGHT-> %016lx\n", move_bit_board->WHITE_KNIGHT);
-	printf(" attack_bit_board->WHITE_BISHOP-> %016lx\n", move_bit_board->WHITE_BISHOP);
-	printf(" attack_bit_board->WHITE_QUEEN -> %016lx\n", move_bit_board->WHITE_QUEEN);
-	printf(" attack_bit_board->WHITE_KING  -> %016lx\n", move_bit_board->WHITE_KING);
-	printf(" attack_bit_board->BLACK_PAWN  -> %016lx\n", move_bit_board->BLACK_PAWN);
-	printf(" attack_bit_board->BLACK_ROOK  -> %016lx\n", move_bit_board->BLACK_ROOK);
-	printf(" attack_bit_board->BLACK_KNIGHT-> %016lx\n", move_bit_board->BLACK_KNIGHT);
-	printf(" attack_bit_board->BLACK_BISHOP-> %016lx\n", move_bit_board->BLACK_BISHOP);
-	printf(" attack_bit_board->BLACK_QUEEN -> %016lx\n", move_bit_board->BLACK_QUEEN);
-	printf(" attack_bit_board->BLACK_KING  -> %016lx\n", move_bit_board->BLACK_KING);
+//	printf(" attack_bit_board->WHITE_PAWN  -> %016lx\n", move_bit_board->WHITE_PAWN);
+//	printf(" attack_bit_board->WHITE_ROOK  -> %016lx\n", move_bit_board->WHITE_ROOK);
+//	printf(" attack_bit_board->WHITE_KNIGHT-> %016lx\n", move_bit_board->WHITE_KNIGHT);
+//	printf(" attack_bit_board->WHITE_BISHOP-> %016lx\n", move_bit_board->WHITE_BISHOP);
+//	printf(" attack_bit_board->WHITE_QUEEN -> %016lx\n", move_bit_board->WHITE_QUEEN);
+//	printf(" attack_bit_board->WHITE_KING  -> %016lx\n", move_bit_board->WHITE_KING);
+//	printf(" attack_bit_board->BLACK_PAWN  -> %016lx\n", move_bit_board->BLACK_PAWN);
+//	printf(" attack_bit_board->BLACK_ROOK  -> %016lx\n", move_bit_board->BLACK_ROOK);
+//	printf(" attack_bit_board->BLACK_KNIGHT-> %016lx\n", move_bit_board->BLACK_KNIGHT);
+//	printf(" attack_bit_board->BLACK_BISHOP-> %016lx\n", move_bit_board->BLACK_BISHOP);
+//	printf(" attack_bit_board->BLACK_QUEEN -> %016lx\n", move_bit_board->BLACK_QUEEN);
+//	printf(" attack_bit_board->BLACK_KING  -> %016lx\n", move_bit_board->BLACK_KING);
 	return FAILED;
 }
