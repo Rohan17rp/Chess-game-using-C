@@ -5,7 +5,7 @@ Name    : Rohan Pravin Patil
 INTRO:
 1. A basic implementation of 2-player chess engine
 2. White player being the one on Upper side denoted by UppperCase letters in yellow color,
-	Black would be in lower side as lowerCase letters in green color
+	Black would be in lower side as lowerCase letters in cyan color
 3. Use make command from terminal for compiling and ./project <file_name> to run the code 
 4. Moves must be entered in format [a-h][1-8][a-h][1-8] which could be interpreted as [initial_row][initial_col][final_row][final_col]
 5. Use quit command to quit game

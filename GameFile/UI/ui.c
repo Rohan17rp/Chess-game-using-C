@@ -3,8 +3,8 @@
 void red(){
 	printf("\033[0;31m");
 }
-void green(){
-	printf("\033[1;32m");
+void cyan(){
+	printf("\033[1;36m");
 }
 void yellow(){
 	printf("\033[1;33m");
@@ -155,7 +155,7 @@ void print_board(char board){
 void color(char display, int i, int j){ 
 	if(isalpha(display)){
 		if(islower(display) && j > 3){
-			green();		
+			cyan();		
 		}
 		else if(j > 3){
 			yellow();

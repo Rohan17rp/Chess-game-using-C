@@ -7,109 +7,172 @@ int main(int argc, char *argv[]){
 	int save_to_file = 0;
 	uint32_t initial_column_number, final_column_number;
 	uint8_t initial_block_val, final_block_val;
-	char initial_row_alphabet, final_row_alphabet, color, name[20], token;
-	bool check_mate, white_color, white_turn;
+	char initial_row_alphabet, final_row_alphabet, color, name[20], name2[20], token;
+	bool check_mate, white_color, white_turn, valid_mode;
 	FILE *fp;
 	char white_king_row = 'a', black_king_row = 'h';
 	int white_king_col = 4, black_king_col = 4, mode;
 	CHESS_PIECE *pieces;
+	char ch;
+	struct dirent *de;  // Pointer for directory entry
+	DIR *dr;	// opendir() returns a pointer of DIR type.
 
 	/* Variable Initialization */
 	check_mate = false;
 	white_turn = true;
+	valid_mode = false;
 
 	/* Set Board to default state */
 	set_board_default(&chess_board);
 
-	/* If no argument is given then open a new file */
-	if(argc == 1){
+	while(!valid_mode){
 		printf("1. To open save game\n");
-                printf("2. To start a new two player game\n");
-                printf("3. To start a new one player game\n");
+		printf("2. To start a new two player game\n");
+		printf("3. To start a new one player game\n");
 		printf("4. Help\n");
 		printf("5. View Saved Files\n");
 		printf("6. Delete Saved file\n");
-                printf("7. Exit\n");
-                scanf("%d", &mode);
+		printf("7. Exit\n");
+		scanf("\n%d", &mode);
+		valid_mode = true;
 		if(mode == 1){
 			printf("Enter File name\n");
+			scanf("%s", name);
+			/* Load Game */
+			int count = 0;
+			printf("Trying to load file '%s'\n", name);	
+			/* Display saved game */
+			fp = open_file(fp, name, "rw");
+			if(fp == NULL){
+				exit(1);
+			}
+			/* Display saved board */
+			display_saved_board(display_board, fp);
+			fclose(fp);
+			/* Load values from file to respective variables */
+			fp = open_file(fp, name, "rw");
+			while(count < 8 && fscanf(fp, "%x",&chess_board.row[count++]));	
+			int temp;
+			fscanf(fp, "%s%d",name, &temp);
+			white_turn = temp ? true : false ;
+			fclose(fp);
+			strcpy(name2, "BOT");
+			printf("Game Sucessfully Loaded\n");
+		}
+		else if(mode == 2){
+			/* proceed normally */
+			printf("Welcome to the realm of chess \n");
+			/* Choose Player color
+			 * Though useless now might come in handy later
+			 */
+			printf("Select Color to play with\nw for white\nb for black\n");
+			while(1){
+				scanf("\n%c",&color);
+				if(color == 'w' || color == 'W'){
+					white_color = true;
+					break;
+				}
+				else if(color == 'b' || color == 'B'){
+					white_color = false;
+					break;
+				}
+				else
+					printf("Enter a valid character\n");
+			}
 
+			printf("Enter a name with max 20 characters\n");
+			while(1){
+				scanf("\n%s", name);
+
+				scanf("\n%s", name2);
+				if(strlen(name) < 20){
+					printf("Welcome %s\n", name);
+					break;
+				}
+				else
+					printf("Enter a valid name\nMax Character Limit is 20\n");
+			}
+			/*Display Default Board */
+			display_board_set_default(display_board);
+
+		}
+		else if(mode == 3){
+			printf("Not yet implemented\n");
+			printf("\nPress 'ENTER' to exit to menu\n");
+			if(getchar() && getchar()){
+				valid_mode = false;
+			}
+			system("clear");
+		}
+		else if(mode == 4){
+			/* Use cat code */
+			fp = fopen("../README.md", "r");
+
+			if(fp == NULL) {
+				perror("open failed");
+				return errno;
+			}
+
+			while(ch != EOF){
+				ch = fgetc(fp);
+				putchar(ch);
+			}
+			fclose(fp);
+			printf("\npress 'ENTER' to exit to menu\n");
+			if(getchar() && getchar()){
+				valid_mode = false;
+			}
+			system("clear");
+		}
+		else if(mode == 5){
+			/* View saved files */
+			/* File path */
+			dr = opendir("./Saved_files/");
+			
+			if (dr == NULL)  // opendir returns NULL if couldn't open directory
+			{
+				printf("Could not open current directory\n" );
+				exit(1);
+			}
+			printf("\n\nSaved files are\n");
+			// for readdir()
+			while ((de = readdir(dr)) != NULL){
+				if(!(!strcmp(de->d_name, "..") || !strcmp(de->d_name,  "."))){
+					printf("%s\n", de->d_name);
+				}
+			}
+			closedir(dr);
+
+			printf("\npress 'ENTER' to exit to menu\n");
+			if(getchar() && getchar()){
+				valid_mode = false;
+			}
+			system("clear");
+		}
+		else if(mode == 6){
+			/* Delete a file */
+			printf("\npress 'ENTER' to exit to menu\n");
+			if(getchar() && getchar()){
+				valid_mode = false;
+			}
+			system("clear");
 		}
 		else if(mode == 7){
 			exit(1);
 		}
 		else{
-			printf("INVALID mode Exiting file\n");
-			exit(1);
+			printf("\nINVALID mode Exiting file\n");
+			valid_mode = false;
 		}
-		/* Choose Player color
-		 * Though useless now might come in handy later
-		 */
-		printf("Select Color to play with\nw for white\nb for black\n");
-		while(1){
-			scanf("\n%c",&color);
-			if(color == 'w' || color == 'W'){
-				white_color = true;
-				break;
-			}
-			else if(color == 'b' || color == 'B'){
-				white_color = false;
-				break;
-			}
-			else
-				printf("Enter a valid character\n");
-		}
-
-		/* Take name from user and save them to file */
-		printf("Enter a name with max 20 characters\n");
-		while(1){
-			scanf("\n%s",name);
-			if(strlen(name) < 20){
-				printf("Welcome %s\n",name);
-				break;
-			}
-			else
-				printf("Enter a valid name\nMax Character Limit is 20\n");
-		}
-		/*Display Default Board */
-		display_board_set_default(display_board);
 	}
-	/* If argument is given then open the file to continue game */
-	else if(argc == 2){
-		/* Load Game */
-		int count = 0;
-		printf("Trying to load file '%s'\n", argv[1]);	
-		/* Display saved game */
-		fp = open_file(fp, argv[1], "rw");
-		if(fp == NULL){
-			exit(1);
-		}
-		/* Display saved board */
-		display_saved_board(display_board, fp);
-		fclose(fp);
-		/* Load values from file to respective variables */
-		fp = open_file(fp, argv[1], "rw");
-		while(count < 8 && fscanf(fp, "%x",&chess_board.row[count++]));	
-		int temp;
-		fscanf(fp, "%s%d",name, &temp);
-		white_turn = temp ? true : false ;
-		fclose(fp);
 
-		printf("Game Sucessfully Loaded\n");
-	}
-	else{
+	if(argc != 1){
 		perror("INVALID NUMBER OF ARGUMENTS");
 		return EINVAL;
 	}
 	/* Play game */
 	while(!check_mate){
-
-		/* Printing Whose turn is it */	
-		get_user_name(white_color, white_turn, name);
-//		if(white_turn)
-//			printf("w-> %s's turn\n",name);
-//		else
-//			printf("b->");
+		get_user_name(white_color, white_turn, name, name2, mode);
 
 		/* Take input from user */
 		token = getToken(&move);
@@ -124,10 +187,8 @@ int main(int argc, char *argv[]){
 		if(token == 's'){
 			/* Get the name of file to save to */
 			char *file_name;
-			if(argc == 1)
+			if(mode == 1 || mode == 2)
 				file_name = name;
-			else if(argc == 2)
-				file_name = argv[1];
 			else{
 				perror("File not found");
 				exit(1);
@@ -160,22 +221,23 @@ int main(int argc, char *argv[]){
 			move.final_row_val = get_row(move.final_row, &chess_board);
 			final_block_val = get_block(move.final_col, move.final_row_val);
 
+			pieces = (CHESS_PIECE *)malloc(sizeof(MOVE_BIT_BOARD));
 			/* Check For Legal Move */
 			if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
 				/* Gets position of pieces by their values */
 				pieces = get_position_bitboards(&chess_board, pieces);
-//					printf(" pieces->WHITE_PAWN  -> %016lx\n", pieces->WHITE_PAWN);
-//					printf(" pieces->WHITE_ROOK  -> %016lx\n", pieces->WHITE_ROOK);
-//					printf(" pieces->WHITE_KNIGHT-> %016lx\n", pieces->WHITE_KNIGHT);
-//					printf(" pieces->WHITE_BISHOP-> %016lx\n", pieces->WHITE_BISHOP);
-//					printf(" pieces->WHITE_QUEEN -> %016lx\n", pieces->WHITE_QUEEN);
-//					printf(" pieces->WHITE_KING  -> %016lx\n", pieces->WHITE_KING);
-//					printf(" pieces->BLACK_PAWN  -> %016lx\n", pieces->BLACK_PAWN);
-//					printf(" pieces->BLACK_ROOK  -> %016lx\n", pieces->BLACK_ROOK);
-//					printf(" pieces->BLACK_KNIGHT-> %016lx\n", pieces->BLACK_KNIGHT);
-//					printf(" pieces->BLACK_BISHOP-> %016lx\n", pieces->BLACK_BISHOP);
-//					printf(" pieces->BLACK_QUEEN -> %016lx\n", pieces->BLACK_QUEEN);
-//					printf(" pieces->BLACK_KING  -> %016lx\n", pieces->BLACK_KING);
+				//					printf(" pieces->WHITE_PAWN  -> %016lx\n", pieces->WHITE_PAWN);
+				//					printf(" pieces->WHITE_ROOK  -> %016lx\n", pieces->WHITE_ROOK);
+				//					printf(" pieces->WHITE_KNIGHT-> %016lx\n", pieces->WHITE_KNIGHT);
+				//					printf(" pieces->WHITE_BISHOP-> %016lx\n", pieces->WHITE_BISHOP);
+				//					printf(" pieces->WHITE_QUEEN -> %016lx\n", pieces->WHITE_QUEEN);
+				//					printf(" pieces->WHITE_KING  -> %016lx\n", pieces->WHITE_KING);
+				//					printf(" pieces->BLACK_PAWN  -> %016lx\n", pieces->BLACK_PAWN);
+				//					printf(" pieces->BLACK_ROOK  -> %016lx\n", pieces->BLACK_ROOK);
+				//					printf(" pieces->BLACK_KNIGHT-> %016lx\n", pieces->BLACK_KNIGHT);
+				//					printf(" pieces->BLACK_BISHOP-> %016lx\n", pieces->BLACK_BISHOP);
+				//					printf(" pieces->BLACK_QUEEN -> %016lx\n", pieces->BLACK_QUEEN);
+				//					printf(" pieces->BLACK_KING  -> %016lx\n", pieces->BLACK_KING);
 				BOARD temp;
 				temp = chess_board;
 				if(initial_block_val == 0x6){
@@ -222,24 +284,40 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
-void get_user_name(bool color, bool white_turn, char *name){
-	if(color){
-		if(white_turn)
-			printf("w-> %s's turn\n",name);
-		else
-			printf("b->");
+void get_user_name(bool color, bool white_turn, char *name, char *name2, int mode){
+	if(mode == 1){
+		if(color){
+			if(white_turn)
+				printf("w-> %s's turn\n",name);
+			else
+				printf("b->");
+		}
+		else{
+			if(!white_turn)
+				printf("b-> %s's turn\n",name);
+			else
+				printf("w->");
+		}
 	}
-	else{
-		if(!white_turn)
-			printf("b-> %s's turn\n",name);
-		else
-			printf("w->");
+	else if(mode == 2){
+		if(color){
+			if(white_turn)
+				printf("w-> %s's turn\n", name);
+			else
+				printf("b-> %s's turn\n", name2);
+		}
+		else{
+			if(!white_turn)
+				printf("b-> %s's turn\n", name);
+			else
+				printf("w-> %s's turn\n", name2);
+		}
 	}
 }
 
 /**
-* \breief if the king is killed then game_over
-*/
+ * \breief if the king is killed then game_over
+ */
 bool check_gameOver(uint8_t final_block_val){
 	if(final_block_val == 0x06){
 		printf("Black Wins\n");
