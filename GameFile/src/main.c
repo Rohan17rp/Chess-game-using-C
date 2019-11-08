@@ -312,8 +312,15 @@ int main(int argc, char *argv[]){
 					/* If king is not in check proceed normally */
 					else{
 						change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
-						if(check_check_mate(move_bit_board, pieces, move, chess_board, black_king_row, black_king_col, white_turn)){
-							return 0;
+						if(white_turn){
+							if(check_check_mate(move_bit_board, pieces, move, chess_board, black_king_row, black_king_col, white_turn)){
+								return 0;
+							}
+						}
+						else{
+							if(check_check_mate(move_bit_board, pieces, move, chess_board, white_king_row, white_king_col, white_turn)){
+								return 0;
+							}
 						}
 						printf("Legal Move\n");
 
@@ -427,7 +434,7 @@ bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE mov
 	uint64_t black_moves, white_moves;
 	BOARD temp, temp2;
 	uint8_t block_val_final, block_val_initial;
-	bool failed;
+	bool failed = true;
 
 	bitboard_init(pieces);
 	pieces = get_position_bitboards(&chess_board, pieces);
@@ -491,13 +498,13 @@ bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE mov
 							if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board) ){
 								if(move_piece(&move, &chess_board)){
 									if(!king_check(king_row, king_col, &chess_board)){
-									printf("5");
-									chess_board = temp;
-									printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
-									return FAILED;
+										printf("5");
+										chess_board = temp;
+										printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
+										return FAILED;
 
-}
-}
+									}
+								}
 							}
 						}
 						chess_board = temp;
