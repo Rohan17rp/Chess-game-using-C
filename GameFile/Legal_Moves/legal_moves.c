@@ -423,9 +423,6 @@ bool king_check(char king_row, uint32_t king_col, BOARD *chess_board){
 	char initial_row = 'a';
 	uint32_t initial_col = 1;
 
-	CHESS_PIECE *move_bit_board;
-	move_bit_board = (CHESS_PIECE *)malloc(sizeof(MOVE_BIT_BOARD));
-	move_bit_board_init(move_bit_board);
 
 	uint8_t block_val_initial, block_val_final;
 	block_val_final = get_block(king_col, get_row(king_row, chess_board));
@@ -441,11 +438,9 @@ bool king_check(char king_row, uint32_t king_col, BOARD *chess_board){
 			block_val_initial = get_block(move.initial_col, move.initial_row_val);
 //			printf("%d\t%c\n", move.initial_col, move.initial_row);
 
-			move_bit_board = move_bitboard(move, *chess_board, move_bit_board);
 
 
 			if(legal_move_check(block_val_initial, block_val_final, &move, chess_board)){
-				printf("King is in check\n");
 				return SUCCESS;
 			}
 			move.initial_col++;
@@ -453,17 +448,5 @@ bool king_check(char king_row, uint32_t king_col, BOARD *chess_board){
 		move.initial_col = 1;
 		move.initial_row++;
 	}
-//	printf(" attack_bit_board->WHITE_PAWN  -> %016lx\n", move_bit_board->WHITE_PAWN);
-//	printf(" attack_bit_board->WHITE_ROOK  -> %016lx\n", move_bit_board->WHITE_ROOK);
-//	printf(" attack_bit_board->WHITE_KNIGHT-> %016lx\n", move_bit_board->WHITE_KNIGHT);
-//	printf(" attack_bit_board->WHITE_BISHOP-> %016lx\n", move_bit_board->WHITE_BISHOP);
-//	printf(" attack_bit_board->WHITE_QUEEN -> %016lx\n", move_bit_board->WHITE_QUEEN);
-//	printf(" attack_bit_board->WHITE_KING  -> %016lx\n", move_bit_board->WHITE_KING);
-//	printf(" attack_bit_board->BLACK_PAWN  -> %016lx\n", move_bit_board->BLACK_PAWN);
-//	printf(" attack_bit_board->BLACK_ROOK  -> %016lx\n", move_bit_board->BLACK_ROOK);
-//	printf(" attack_bit_board->BLACK_KNIGHT-> %016lx\n", move_bit_board->BLACK_KNIGHT);
-//	printf(" attack_bit_board->BLACK_BISHOP-> %016lx\n", move_bit_board->BLACK_BISHOP);
-//	printf(" attack_bit_board->BLACK_QUEEN -> %016lx\n", move_bit_board->BLACK_QUEEN);
-//	printf(" attack_bit_board->BLACK_KING  -> %016lx\n", move_bit_board->BLACK_KING);
 	return FAILED;
 }

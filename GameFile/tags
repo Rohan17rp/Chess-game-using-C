@@ -49,10 +49,12 @@ bishop_block	Legal_Moves/legal_moves.c	/^bool bishop_block(char initial_row, cha
 bishop_legal	Legal_Moves/legal_moves.c	/^bool bishop_legal(char initial_row, char final_row, uint32_t initial_col, uint32_t final_col){$/;"	f
 bitboard_init	Boards/attack_bit_boards.c	/^void bitboard_init(CHESS_PIECE *piece){$/;"	f
 board	Typedef/typedef.h	/^typedef struct board{$/;"	s
-calculate_all_possible_moves	1player/calculate_pins.c	/^ void calculate_all_possible_moves(BOARD *chess_board){$/;"	f
+calculate_all_possible_moves	1player/calculate_pins.c	/^ void calculate_all_possible_moves(BOARD *chess_board, CHESS_PIECE *piece){$/;"	f
 change_move	UI/ui.c	/^void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_t final_col, uint8_t block_val, char display_board[37][58]){$/;"	f
 check_gameOver	src/main.c	/^bool check_gameOver(uint8_t final_block_val){$/;"	f
 chess_board	Typedef/typedef.h	/^BOARD chess_board;$/;"	v
+color	UI/ui.c	/^void color(char display, int i, int j){ $/;"	f
+cyan	UI/ui.c	/^void cyan(){$/;"	f
 display_board	UI/board_display.c	/^char display_board[37][58] = { $/;"	v
 display_board_set_default	UI/ui.c	/^void display_board_set_default(char display_board[37][58]){$/;"	f
 display_saved_board	UI/ui.c	/^void display_saved_board(char display_board[37][58], FILE *fp){$/;"	f
@@ -65,7 +67,7 @@ getToken	src/main.c	/^char getToken(MOVE *move){$/;"	f
 get_block	Boards/boards.c	/^uint8_t get_block(uint32_t column_number, uint32_t row_val){$/;"	f
 get_position_bitboards	Boards/attack_bit_boards.c	/^CHESS_PIECE *get_position_bitboards(BOARD *chess_board, CHESS_PIECE *piece){$/;"	f
 get_row	Boards/boards.c	/^uint32_t get_row(char row_alphabet, BOARD *chess_board){$/;"	f
-get_user_name	src/main.c	/^void get_user_name(bool color, bool white_turn, char *name){$/;"	f
+get_user_name	src/main.c	/^void get_user_name(bool color, bool white_turn, char *name, char *name2, int mode){$/;"	f
 green	UI/ui.c	/^void green(){$/;"	f
 identify_piece	Pieces/pieces.c	/^void identify_piece(){$/;"	f
 initial_col	Typedef/typedef.h	/^        uint32_t initial_col;$/;"	m	struct:Move

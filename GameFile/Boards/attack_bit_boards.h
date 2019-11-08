@@ -42,4 +42,4 @@ CHESS_PIECE PIECES, MOVE_BIT_BOARD;
 void move_bit_board_init(CHESS_PIECE  *move_bit_board);
 void bitboard_init(CHESS_PIECE *piece);
 CHESS_PIECE *get_position_bitboards(BOARD *chess_board, CHESS_PIECE *piece);
-CHESS_PIECE *move_bitboard(MOVE move, BOARD chess_board, CHESS_PIECE *move_bit_board);
+CHESS_PIECE *move_bitboard(MOVE move, BOARD chess_board, CHESS_PIECE *move_bit_board, char king_row, int king_col);

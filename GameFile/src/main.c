@@ -1,5 +1,6 @@
 #include "modules.h"
 
+bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn);
 //print_hex_board(&chess_board);//This command works and prints board in form of hex values
 int main(int argc, char *argv[]){
 
@@ -7,12 +8,12 @@ int main(int argc, char *argv[]){
 	int save_to_file = 0;
 	uint32_t initial_column_number, final_column_number;
 	uint8_t initial_block_val, final_block_val;
-	char initial_row_alphabet, final_row_alphabet, color, name[20], name2[20], token;
+	char initial_row_alphabet, final_row_alphabet, color, name[20], name2[20], token, del_name[25];
 	bool check_mate, white_color, white_turn, valid_mode;
 	FILE *fp;
 	char white_king_row = 'a', black_king_row = 'h';
 	int white_king_col = 4, black_king_col = 4, mode;
-	CHESS_PIECE *pieces;
+	CHESS_PIECE *pieces, *move_bit_board;
 	char ch;
 	struct dirent *de;  // Pointer for directory entry
 	DIR *dr;	// opendir() returns a pointer of DIR type.
@@ -24,6 +25,7 @@ int main(int argc, char *argv[]){
 
 	/* Set Board to default state */
 	set_board_default(&chess_board);
+	system("clear");
 
 	while(!valid_mode){
 		printf("1. To open save game\n");
@@ -62,8 +64,24 @@ int main(int argc, char *argv[]){
 		else if(mode == 2){
 			/* proceed normally */
 			printf("Welcome to the realm of chess \n");
+			printf("Enter a name with max 20 characters\n");
+			while(1){
+				scanf("\n%s", name);
+				printf("player 2 name\n");
+				scanf("\n%s", name2);
+				if(strlen(name) < 20){
+					printf("Welcome %s\n", name);
+					break;
+				}
+				else
+					printf("Enter a valid name\nMax Character Limit is 20\n");
+			}
+			/*Display Default Board */
+			display_board_set_default(display_board);
+
+		}
+		else if(mode == 3){
 			/* Choose Player color
-			 * Though useless now might come in handy later
 			 */
 			printf("Select Color to play with\nw for white\nb for black\n");
 			while(1){
@@ -79,12 +97,9 @@ int main(int argc, char *argv[]){
 				else
 					printf("Enter a valid character\n");
 			}
-
 			printf("Enter a name with max 20 characters\n");
 			while(1){
 				scanf("\n%s", name);
-
-				scanf("\n%s", name2);
 				if(strlen(name) < 20){
 					printf("Welcome %s\n", name);
 					break;
@@ -92,12 +107,10 @@ int main(int argc, char *argv[]){
 				else
 					printf("Enter a valid name\nMax Character Limit is 20\n");
 			}
-			/*Display Default Board */
-			display_board_set_default(display_board);
 
-		}
-		else if(mode == 3){
 			printf("Not yet implemented\n");
+
+
 			printf("\nPress 'ENTER' to exit to menu\n");
 			if(getchar() && getchar()){
 				valid_mode = false;
@@ -105,7 +118,7 @@ int main(int argc, char *argv[]){
 			system("clear");
 		}
 		else if(mode == 4){
-			/* Use cat code */
+			/* Using cat code */
 			fp = fopen("../README.md", "r");
 
 			if(fp == NULL) {
@@ -128,7 +141,7 @@ int main(int argc, char *argv[]){
 			/* View saved files */
 			/* File path */
 			dr = opendir("./Saved_files/");
-			
+
 			if (dr == NULL)  // opendir returns NULL if couldn't open directory
 			{
 				printf("Could not open current directory\n" );
@@ -136,11 +149,13 @@ int main(int argc, char *argv[]){
 			}
 			printf("\n\nSaved files are\n");
 			// for readdir()
+			green();
 			while ((de = readdir(dr)) != NULL){
 				if(!(!strcmp(de->d_name, "..") || !strcmp(de->d_name,  "."))){
 					printf("%s\n", de->d_name);
 				}
 			}
+			reset();
 			closedir(dr);
 
 			printf("\npress 'ENTER' to exit to menu\n");
@@ -151,6 +166,17 @@ int main(int argc, char *argv[]){
 		}
 		else if(mode == 6){
 			/* Delete a file */
+			char path[] = "Saved_files/";
+			scanf("%s", del_name);
+			strcat(path, del_name);
+			if (remove(path) == 0) {
+				red();
+				printf("Deleted successfully\n%s\n", del_name); 
+				reset();
+			}
+			else{
+				printf("Unable to delete the file\n"); 
+			}
 			printf("\npress 'ENTER' to exit to menu\n");
 			if(getchar() && getchar()){
 				valid_mode = false;
@@ -161,8 +187,10 @@ int main(int argc, char *argv[]){
 			exit(1);
 		}
 		else{
-			printf("\nINVALID mode Exiting file\n");
+			red();
+			printf("\nINVALID mode\n");
 			valid_mode = false;
+			reset();
 		}
 	}
 
@@ -170,7 +198,7 @@ int main(int argc, char *argv[]){
 		perror("INVALID NUMBER OF ARGUMENTS");
 		return EINVAL;
 	}
-	/* Play game */
+	/* Play game in 2 player mode*/
 	while(!check_mate){
 		get_user_name(white_color, white_turn, name, name2, mode);
 
@@ -222,22 +250,24 @@ int main(int argc, char *argv[]){
 			final_block_val = get_block(move.final_col, move.final_row_val);
 
 			pieces = (CHESS_PIECE *)malloc(sizeof(MOVE_BIT_BOARD));
+
+			move_bit_board = (CHESS_PIECE *)malloc(sizeof(MOVE_BIT_BOARD));
 			/* Check For Legal Move */
 			if(legal_move_check(initial_block_val, final_block_val, &move, &chess_board)){
 				/* Gets position of pieces by their values */
 				pieces = get_position_bitboards(&chess_board, pieces);
-				//					printf(" pieces->WHITE_PAWN  -> %016lx\n", pieces->WHITE_PAWN);
-				//					printf(" pieces->WHITE_ROOK  -> %016lx\n", pieces->WHITE_ROOK);
-				//					printf(" pieces->WHITE_KNIGHT-> %016lx\n", pieces->WHITE_KNIGHT);
-				//					printf(" pieces->WHITE_BISHOP-> %016lx\n", pieces->WHITE_BISHOP);
-				//					printf(" pieces->WHITE_QUEEN -> %016lx\n", pieces->WHITE_QUEEN);
-				//					printf(" pieces->WHITE_KING  -> %016lx\n", pieces->WHITE_KING);
-				//					printf(" pieces->BLACK_PAWN  -> %016lx\n", pieces->BLACK_PAWN);
-				//					printf(" pieces->BLACK_ROOK  -> %016lx\n", pieces->BLACK_ROOK);
-				//					printf(" pieces->BLACK_KNIGHT-> %016lx\n", pieces->BLACK_KNIGHT);
-				//					printf(" pieces->BLACK_BISHOP-> %016lx\n", pieces->BLACK_BISHOP);
-				//					printf(" pieces->BLACK_QUEEN -> %016lx\n", pieces->BLACK_QUEEN);
-				//					printf(" pieces->BLACK_KING  -> %016lx\n", pieces->BLACK_KING);
+				printf(" pieces->WHITE_PAWN  -> %016lx\n", pieces->WHITE_PAWN);
+				printf(" pieces->WHITE_ROOK  -> %016lx\n", pieces->WHITE_ROOK);
+				printf(" pieces->WHITE_KNIGHT-> %016lx\n", pieces->WHITE_KNIGHT);
+				printf(" pieces->WHITE_BISHOP-> %016lx\n", pieces->WHITE_BISHOP);
+				printf(" pieces->WHITE_QUEEN -> %016lx\n", pieces->WHITE_QUEEN);
+				printf(" pieces->WHITE_KING  -> %016lx\n", pieces->WHITE_KING);
+				printf(" pieces->BLACK_PAWN  -> %016lx\n", pieces->BLACK_PAWN);
+				printf(" pieces->BLACK_ROOK  -> %016lx\n", pieces->BLACK_ROOK);
+				printf(" pieces->BLACK_KNIGHT-> %016lx\n", pieces->BLACK_KNIGHT);
+				printf(" pieces->BLACK_BISHOP-> %016lx\n", pieces->BLACK_BISHOP);
+				printf(" pieces->BLACK_QUEEN -> %016lx\n", pieces->BLACK_QUEEN);
+				printf(" pieces->BLACK_KING  -> %016lx\n", pieces->BLACK_KING);
 				BOARD temp;
 				temp = chess_board;
 				if(initial_block_val == 0x6){
@@ -249,6 +279,26 @@ int main(int argc, char *argv[]){
 					black_king_col = move.final_col;
 				}
 				if(move_piece(&move, &chess_board)){
+					if(!white_turn){
+						move_bit_board = move_bitboard(move, chess_board, move_bit_board, white_king_row, white_king_col);
+					}
+					else {
+						move_bit_board = move_bitboard(move, chess_board, move_bit_board, black_king_row, black_king_col);
+					}
+					printf(" attack_bit_board->WHITE_PAWN  -> %016lx\n", move_bit_board->WHITE_PAWN);
+					printf(" attack_bit_board->WHITE_ROOK  -> %016lx\n", move_bit_board->WHITE_ROOK);
+					printf(" attack_bit_board->WHITE_KNIGHT-> %016lx\n", move_bit_board->WHITE_KNIGHT);
+					printf(" attack_bit_board->WHITE_BISHOP-> %016lx\n", move_bit_board->WHITE_BISHOP);
+					printf(" attack_bit_board->WHITE_QUEEN -> %016lx\n", move_bit_board->WHITE_QUEEN);
+					printf(" attack_bit_board->WHITE_KING  -> %016lx\n", move_bit_board->WHITE_KING);
+					printf(" attack_bit_board->BLACK_PAWN  -> %016lx\n", move_bit_board->BLACK_PAWN);
+					printf(" attack_bit_board->BLACK_ROOK  -> %016lx\n", move_bit_board->BLACK_ROOK);
+					printf(" attack_bit_board->BLACK_KNIGHT-> %016lx\n", move_bit_board->BLACK_KNIGHT);
+					printf(" attack_bit_board->BLACK_BISHOP-> %016lx\n", move_bit_board->BLACK_BISHOP);
+					printf(" attack_bit_board->BLACK_QUEEN -> %016lx\n", move_bit_board->BLACK_QUEEN);
+					printf(" attack_bit_board->BLACK_KING  -> %016lx\n", move_bit_board->BLACK_KING);
+
+
 					/* check if it is black turn and if king is in check */
 					if(!white_turn && king_check(black_king_row, black_king_col, &chess_board)){
 						chess_board = temp;
@@ -262,6 +312,9 @@ int main(int argc, char *argv[]){
 					/* If king is not in check proceed normally */
 					else{
 						change_move(move.initial_row, move.initial_col, move.final_row, move.final_col, initial_block_val, display_board);
+						if(check_check_mate(move_bit_board, pieces, move, chess_board, black_king_row, black_king_col, white_turn)){
+							return 0;
+						}
 						printf("Legal Move\n");
 
 
@@ -283,7 +336,9 @@ int main(int argc, char *argv[]){
 	}
 	return 0;
 }
-
+/**
+ * \brief prints whose turn is it
+ */
 void get_user_name(bool color, bool white_turn, char *name, char *name2, int mode){
 	if(mode == 1){
 		if(color){
@@ -367,4 +422,99 @@ char getToken(MOVE *move){
 	move->final_row = token[2];
 	move->final_col = atoi(&token[3]);
 	return 'm';
+}
+bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn){
+	uint64_t black_moves, white_moves;
+	BOARD temp, temp2;
+	uint8_t block_val_final, block_val_initial;
+	bool failed;
+
+	bitboard_init(pieces);
+	pieces = get_position_bitboards(&chess_board, pieces);
+	move_bit_board_init(move_bit_board);
+	move_bit_board = move_bitboard(move, chess_board, move_bit_board, king_row, king_col);
+	white_moves = move_bit_board->WHITE_PAWN | move_bit_board->WHITE_ROOK | move_bit_board->WHITE_KNIGHT | move_bit_board->WHITE_BISHOP | move_bit_board->WHITE_QUEEN | move_bit_board->WHITE_KING;
+	black_moves = move_bit_board->BLACK_PAWN | move_bit_board->BLACK_ROOK | move_bit_board->BLACK_KNIGHT | move_bit_board->BLACK_BISHOP | move_bit_board->BLACK_QUEEN | move_bit_board->BLACK_KING;
+	if((!(white_moves & pieces->BLACK_KING) && white_turn) || (!(black_moves & pieces->WHITE_KING) && !white_turn)){
+		return FAILED;
+	}
+	else if((((move_bit_board->BLACK_KING ^ white_moves) & pieces->BLACK_KING) && white_turn) || (move_bit_board->WHITE_KING ^ black_moves) & pieces->WHITE_KING ){
+		move.final_row = 'a';
+		move.final_col = 1;
+		move.initial_row = king_row;
+		move.initial_col = king_col;
+		temp2 = chess_board;
+		move.initial_row_val = get_row(move.initial_row, &chess_board);
+		block_val_initial = get_block(move.initial_col, move.initial_row_val);
+		while(move.final_row < 'i'){
+			while(move.final_col < 9){
+				move.final_row_val = get_row(move.final_row, &chess_board);
+				block_val_final = get_block(move.final_col, move.final_row_val);
+				if(((block_val_initial >> 3) && white_turn) || (!(block_val_initial >> 3) && !white_turn)){
+					temp = chess_board;
+					if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board)){
+						if(move_piece(&move, &chess_board)){
+							if(!king_check(move.final_row, move.final_col, &chess_board)){
+								chess_board = temp2;
+								printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
+								return FAILED;
+							}
+
+
+						}
+					}
+					temp = chess_board;
+				}
+				chess_board = temp2;
+				move.final_col++;
+			}
+			move.final_col = 1;
+			move.final_row++;
+		}
+		failed = false;
+	}
+	if(!failed){
+		move.final_row = 'a';
+		move.final_col = 1;
+		move.initial_row = 'a';
+		move.initial_col = 1;
+		while(move.final_row < 'i'){
+			while(move.final_col < 9){
+				while(move.initial_row < 'i'){
+					while(move.initial_col < 9){
+						move.final_row_val = get_row(move.final_row, &chess_board);
+						block_val_final = get_block(move.final_col, move.final_row_val);
+						move.initial_row_val = get_row(move.initial_row, &chess_board);
+						block_val_initial = get_block(move.initial_col, move.initial_row_val);
+						temp = chess_board;
+						if(((block_val_initial >> 3) && white_turn) || (!(block_val_initial >> 3) && !white_turn)){
+							if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board) ){
+								if(move_piece(&move, &chess_board)){
+									if(!king_check(king_row, king_col, &chess_board)){
+									printf("5");
+									chess_board = temp;
+									printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
+									return FAILED;
+
+}
+}
+							}
+						}
+						chess_board = temp;
+						move.initial_col++;
+					}
+					move.initial_col = 1;
+					move.initial_row++;
+				}
+				move.initial_col = 1;
+				move.initial_row = 'a';
+				move.final_col++;
+			}
+			move.initial_col = 1;
+			move.initial_row = 'a';
+			move.final_col = 1;
+			move.final_row++;
+		}
+	}
+	return SUCCESS;
 }

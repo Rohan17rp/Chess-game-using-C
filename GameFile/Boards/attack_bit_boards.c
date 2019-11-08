@@ -1,8 +1,8 @@
 #include "attack_bit_boards.h"
 #include "../Pieces/pieces.h"
 /**
-* \brief initializes bitboard 
-*/
+ * \brief initializes bitboard 
+ */
 void bitboard_init(CHESS_PIECE *piece){
 	piece->WHITE_PAWN	= 0x0000000000000000; 
 	piece->WHITE_KNIGHT	= 0x0000000000000000;
@@ -22,8 +22,8 @@ void bitboard_init(CHESS_PIECE *piece){
 }
 
 /**
-* \brief initializes move_bitboard 
-*/
+ * \brief initializes move_bitboard 
+ */
 void move_bit_board_init(CHESS_PIECE *move_bit_board){
 	move_bit_board->WHITE_PAWN	= 0x0000000000000000; 
 	move_bit_board->WHITE_KNIGHT	= 0x0000000000000000;
@@ -43,8 +43,8 @@ void move_bit_board_init(CHESS_PIECE *move_bit_board){
 }
 
 /**
-* \brief Identifies pieces position by their block_value and returns bitmask of their positions
-*/
+ * \brief Identifies pieces position by their block_value and returns bitmask of their positions
+ */
 CHESS_PIECE *get_position_bitboards(BOARD *chess_board, CHESS_PIECE *piece){
 	bitboard_init(piece);
 	int pos = 0, row_num, column_number, block_val;
@@ -109,74 +109,99 @@ CHESS_PIECE *get_position_bitboards(BOARD *chess_board, CHESS_PIECE *piece){
 }
 
 /**
-* \brief returns a bitmask of pieces to which the pieces could move
-*	eg. bitmask of the squares that a WHITE_PAWN can move is denoted by move_bit_board->WHITE_PAWN
-*/
-CHESS_PIECE *move_bitboard(MOVE move, BOARD chess_board, CHESS_PIECE *move_bit_board){
+ * \brief returns a bitmask of pieces to which the pieces could move
+ *	eg. bitmask of the squares that a WHITE_PAWN can move is denoted by move_bit_board->WHITE_PAWN
+ * \prerequisites should be run in a while loop that access all initial positions of board
+ */
+CHESS_PIECE *move_bitboard(MOVE move, BOARD chess_board, CHESS_PIECE *move_bit_board, char king_row, int king_col){
 	uint8_t block_val_initial, block_val_final;
 	int pos;
 	uint64_t move_bit_board_val;
-	move.initial_row_val = get_row(move.initial_row, &chess_board);
-	block_val_initial = get_block(move.initial_col, move.initial_row_val);
+	bool white_turn;
+	BOARD temp;
+	int black_king_row = 'h'; char black_king_col = '4';
+	int white_king_row = 'a'; char white_king_col = '4';
+	//	move.initial_row_val = get_row(move.initial_row, &chess_board);
+	//	block_val_initial = get_block(move.initial_col, move.initial_row_val);
 	move.final_col = 1;
 	move.final_row = 'a';
-	while(move.final_row < 'i'){
-		while(move.final_col < 9){
-			move.final_row_val = get_row(move.final_row, &chess_board);
-			block_val_final = get_block(move.final_col, move.final_row_val);
-			if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board)){
-				pos = ((move.final_row - 'a') * 8) + (move.final_col - 1);
-				switch(block_val_initial){
-					case 0:
-						move_bit_board->BLANK_SPACE |= (1ul << pos);
-						break;
-					case 1:
-						move_bit_board->WHITE_PAWN |= (1ul << pos);
-						break;
-					case 9:
-						move_bit_board->BLACK_PAWN |= (1ul << pos);
-						break;
-					case 2:
-						move_bit_board->WHITE_KNIGHT |= (1ul << pos);
-						break;
-					case 10:
-						move_bit_board->BLACK_KNIGHT |= (1ul << pos);
-						break;
-					case 3:
-						move_bit_board->WHITE_BISHOP |= (1ul << pos);
-						break;
-					case 11:
-						move_bit_board->BLACK_BISHOP |= (1ul << pos);
-						break;
-					case 4:
-						move_bit_board->WHITE_ROOK |= (1ul << pos);
-						break;
-					case 12:
-						move_bit_board->BLACK_ROOK |= (1ul << pos);
-						break;
-					case 5:
-						move_bit_board->WHITE_QUEEN |= (1ul << pos);
-						break;
-					case 13:
-						move_bit_board->BLACK_QUEEN |= (1ul << pos);
-						break;
-					case 6: 
-						move_bit_board->WHITE_KING |= (1ul << pos);
-						break;
-					case 14:
-						move_bit_board->BLACK_KING |= (1ul << pos);
-						break;
-					default:
-						printf("Error in positions\n");
-						break;
+	move.initial_col = 1;
+	move.initial_row = 'a';
+	while(move.initial_row < 'i'){
+		while(move.initial_col < 9){
+			move.initial_row_val = get_row(move.initial_row, &chess_board);
+			block_val_initial = get_block(move.initial_col, move.initial_row_val);
+			
+			while(move.final_row < 'i'){
+				while(move.final_col < 9){
+					move.final_row_val = get_row(move.final_row, &chess_board);
+					block_val_final = get_block(move.final_col, move.final_row_val);
+					
+					if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board)){
+						pos = ((move.final_row - 'a') * 8) + (move.final_col - 1);
+						switch(block_val_initial){
+							case 0:
+								move_bit_board->BLANK_SPACE |= (1ul << pos);
+								break;
+							case 1:
+								move_bit_board->WHITE_PAWN |= (1ul << pos);
+								break;
+							case 9:
+								move_bit_board->BLACK_PAWN |= (1ul << pos);
+								break;
+							case 2:
+								move_bit_board->WHITE_KNIGHT |= (1ul << pos);
+								break;
+							case 10:
+								move_bit_board->BLACK_KNIGHT |= (1ul << pos);
+								break;
+							case 3:
+								move_bit_board->WHITE_BISHOP |= (1ul << pos);
+								break;
+							case 11:
+								move_bit_board->BLACK_BISHOP |= (1ul << pos);
+								break;
+							case 4:
+								move_bit_board->WHITE_ROOK |= (1ul << pos);
+								break;
+							case 12:
+								move_bit_board->BLACK_ROOK |= (1ul << pos);
+								break;
+							case 5:
+								move_bit_board->WHITE_QUEEN |= (1ul << pos);
+								break;
+							case 13:
+								move_bit_board->BLACK_QUEEN |= (1ul << pos);
+								break;
+							case 6: 
+								move_bit_board->WHITE_KING |= (1ul << pos);
+								break;
+							case 14:
+								move_bit_board->BLACK_KING |= (1ul << pos);
+								break;
+							default:
+								printf("Error in positions\n");
+								break;
+								//						}
+					}
+					//				move_bit_board_val |= (1ul << pos);
+					//		printf("%d\t%c\n%d\t%c\n%d\n", move.initial_col, move.initial_row, move.final_col, move.final_row, pos);
 				}
-				move_bit_board_val |= (1ul << pos);
-		//		printf("%d\t%c\n%d\t%c\n%d\n", move.initial_col, move.initial_row, move.final_col, move.final_row, pos);
+				move.final_col++;
+				}
+				move.final_col = 1;
+				move.final_row++;
 			}
-			move.final_col++;
+			
+			move.final_col = 1;
+			move.final_row = 'a';
+			move.initial_col++;
 		}
 		move.final_col = 1;
-		move.final_row++;
+		move.final_row = 'a';
+		move.initial_col = 1;
+		move.initial_row++;
 	}
+
 	return move_bit_board;
 }

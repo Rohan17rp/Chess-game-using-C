@@ -9,7 +9,9 @@ void cyan(){
 void yellow(){
 	printf("\033[1;33m");
 }
-
+void green(){
+	printf("\033[1;32m");
+}
 void reset(){
 	printf("\033[0m");
 }
