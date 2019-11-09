@@ -206,7 +206,7 @@ int main(int argc, char *argv[]){
 	/* Play game in 2 player mode*/
 	while(!check_mate){
 		get_user_name(white_color, white_turn, name, name2, mode);
-		if(mode == 1 || mode == 2 || white_turn){
+		if(mode == 1 || mode == 2 || !(white_color ^ white_turn)){
 			/* Take input from user */
 			token = getToken(&move);
 		}
@@ -228,7 +228,7 @@ int main(int argc, char *argv[]){
 		if(token == 's'){
 			/* Get the name of file to save to */
 			char *file_name;
-			if(mode == 1 || mode == 2)
+			if(mode == 1 || mode == 2 || mode == 3)
 				file_name = name;
 			else{
 				perror("File not found");
@@ -348,7 +348,7 @@ void get_user_name(bool color, bool white_turn, char *name, char *name2, int mod
 				printf("w->");
 		}
 	}
-	else if(mode == 2){
+	else if(mode == 1 || mode == 2){
 		if(color){
 			if(white_turn)
 				printf("w-> %s's turn\n", name);
@@ -544,7 +544,7 @@ MOVE return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE mo
 					move.initial_row_val = get_row(move.initial_row, &chess_board);
 					block_val_initial = get_block(move.initial_col, move.initial_row_val);
 					temp = chess_board;
-					if((block_val_initial >> 3)){
+					if(((block_val_initial >> 3) && !white_turn) || (!(block_val_initial >> 3) && white_turn)){
 						if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board) ){
 							if(move_piece(&move, &chess_board)){
 								if(!king_check(king_row, king_col, &chess_board)){
@@ -590,7 +590,7 @@ MOVE return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE mo
 			while(move.final_col < 9){
 				move.final_row_val = get_row(move.final_row, &chess_board);
 				block_val_final = get_block(move.final_col, move.final_row_val);
-				if(((block_val_initial >> 3))){
+				if(((block_val_initial >> 3) && !white_turn) || (!(block_val_initial >> 3) && white_turn)){
 					temp = chess_board;
 					if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board)){
 						if(move_piece(&move, &chess_board)){

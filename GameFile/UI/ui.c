@@ -80,6 +80,7 @@ void display_saved_board(char display_board[37][58], FILE *fp){
 			display_board[5 + (i * 4)][9 + (j * 6)] = piece_notation;
 		}
 	}
+	system("clear");
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
 			//	printf("%c",display_board[i][j]);
@@ -136,6 +137,7 @@ void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_
 	}
 	display_board[5 + (row_num_initial * 4)][3 + (initial_col * 6)] = ' ';
 	display_board[5 + (row_num_final * 4)][3 + (final_col * 6)] = piece_notation;
+	system("clear");
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
 			//		printf("%c",display_board[i][j]);
