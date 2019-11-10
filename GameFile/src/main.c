@@ -7,9 +7,8 @@ int main(int argc, char *argv[]){
 
 	/* Variable Declarations */
 	int save_to_file = 0;
-	uint32_t initial_column_number, final_column_number;
 	uint8_t initial_block_val, final_block_val;
-	char initial_row_alphabet, final_row_alphabet, color, name[20], name2[20], token, del_name[25];
+	char color, name[20], name2[20], token, del_name[25];
 	bool check_mate, white_color, white_turn, valid_mode;
 	FILE *fp;
 	char white_king_row = 'a', black_king_row = 'h';
@@ -384,7 +383,6 @@ bool check_gameOver(uint8_t final_block_val){
 FILE* open_file(FILE *fp, char *file_name, char *mode){
 	char path[] = "Saved_files/";
 	char name[20];
-	int i = 0;
 	strcpy(name, file_name);
 	strcat(path, name);	
 	fp = fopen(path, mode);
@@ -619,8 +617,3 @@ MOVE return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE mo
 
 	return temp_move;
 }
-/*
-   MOVE return_legal_move_next_level(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn){
-
-   }
- */

@@ -47,13 +47,12 @@ void move_bit_board_init(CHESS_PIECE *move_bit_board){
  */
 CHESS_PIECE *get_position_bitboards(BOARD *chess_board, CHESS_PIECE *piece){
 	bitboard_init(piece);
-	int pos = 0, row_num, column_number, block_val;
+	int pos = 0, column_number, block_val;
 	char row_alphabet;
 	column_number = 1;
 	row_alphabet = 'a';
 	while(row_alphabet < 'i'){
 		while(column_number < 9){
-			row_num = (int)row_alphabet - (int)'a';
 			block_val = get_block(column_number, get_row(row_alphabet, chess_board));
 			switch(block_val){
 				case 0:
@@ -116,13 +115,6 @@ CHESS_PIECE *get_position_bitboards(BOARD *chess_board, CHESS_PIECE *piece){
 CHESS_PIECE *move_bitboard(MOVE move, BOARD chess_board, CHESS_PIECE *move_bit_board, char king_row, int king_col){
 	uint8_t block_val_initial, block_val_final;
 	int pos;
-	uint64_t move_bit_board_val;
-	bool white_turn;
-	BOARD temp;
-	int black_king_row = 'h'; char black_king_col = '4';
-	int white_king_row = 'a'; char white_king_col = '4';
-	//	move.initial_row_val = get_row(move.initial_row, &chess_board);
-	//	block_val_initial = get_block(move.initial_col, move.initial_row_val);
 	move.final_col = 1;
 	move.final_row = 'a';
 	move.initial_col = 1;

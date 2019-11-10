@@ -12,16 +12,17 @@ INTRO:
 6. Use save command to save game
 7. Checking for pseudo legal moves have been completed 
 8. Check and check_mate detection has been done
+9. One player mode generates Legal move to play
 
 ISSUES:
 1. En-passen, Castling and Pawn promotion not handled
-2. 1player not yet implemented
+2. 1player mode generates random moves
 
 SAVE & LOAD GAME:
 Save a game to file and retrive game from a file implemented
 1. If the program is run in mode 2 or 3 then the player name or 1st player name respectively entered would be the name of file in which the game state would be saved
 2. If a given file name does not exist then respective error message is displayed
-3. The game doesn't provide any autosave feature so you need to manually save the game
+3. The game doesn't provide any autosave feature so you need to manually save the game (using save command)
 4. All Saved games are stored in a Saved_files directory
 5. If you try to save again using same name then, existing file would be over-written
 
