@@ -100,14 +100,12 @@ bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
 	if(final_block_val){
 		if(initial_block_val >> 3){
 			if((abs(move->final_col - move->initial_col) == 1) && ((move->initial_row - move->final_row) == 1)){
-				//				if(legal_kill(initial_block_val, final_block_val))
 				return SUCCESS;
 			}
 		}
 		else{
 
 			if((abs(move->final_col - move->initial_col) == 1) && ((move->final_row - move->initial_row) == 1)){
-				//				if(legal_kill(initial_block_val, final_block_val));
 				return SUCCESS;
 			}
 		}
@@ -116,9 +114,7 @@ bool pawn_kill_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
 
 }
 /**
- * \brief gives legal moves for pawn (excluding killing)
- *
- * 
+ * \brief gives legal moves for pawn (excluding killing) 
  */
 bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val){
 	if(is_empty(final_block_val)){
@@ -138,7 +134,6 @@ bool pawn_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_
 
 /**
  * \brief allow pawn to move 2 steps if its first move
- *
  */
 bool pawn_first_move_legal(MOVE *move, uint8_t initial_block_val, uint8_t final_block_val, BOARD *chess_board){
 	uint8_t mid_block_val;

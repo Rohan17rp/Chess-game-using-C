@@ -1,8 +1,8 @@
 #include "modules.h"
 
 bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn);
-MOVE return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn);
-//print_hex_board(&chess_board);//This command works and prints board in form of hex values
+int return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE *move, int size, BOARD chess_board, char king_row, int king_col, bool white_turn);
+
 int main(int argc, char *argv[]){
 
 	/* Variable Declarations */
@@ -18,7 +18,10 @@ int main(int argc, char *argv[]){
 	struct dirent *de;  // Pointer for directory entry
 	DIR *dr;	// opendir() returns a pointer of DIR type.
 	BOARD temp;
+	MOVE temp_move[100];
+	int temp_int, temp_int_final, size = 100;
 
+	srand(time(0));
 	/* Variable Initialization */
 	check_mate = false;
 	white_turn = true;
@@ -207,12 +210,14 @@ int main(int argc, char *argv[]){
 			token = getToken(&move);
 		}
 		else{
-			move = return_legal_move(move_bit_board, pieces, move, chess_board, black_king_row, black_king_col, white_turn);
+			temp_int = return_legal_move(move_bit_board, pieces, temp_move, size, chess_board, black_king_row, black_king_col, white_turn);
 			if(move.initial_col == -1){
 				printf("Sorry can't process\n");
 				break;
 			}
 			token = 'm';
+			temp_int_final = rand()%(temp_int + 1);
+			move = temp_move[temp_int_final];
 		}
 		/* Quit Game */
 		if(token == 'q'){
@@ -508,112 +513,108 @@ bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE mov
 	return SUCCESS;
 }
 
-/** 
- * \brief returns a legal move which is best form the given level
- */
-MOVE return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn){
-	uint8_t block_val_final, block_val_initial, temp_block_val_final;	
-	BOARD temp, temp2;
-	MOVE temp_move;
-	bool first = true;
+/**
+* \brief return a random legal move
+*/
+int return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE *temp_move, int size, BOARD chess_board, char king_row, int king_col, bool white_turn){
+        uint8_t block_val_final, block_val_initial, temp_block_val_final;
+        BOARD temp, temp2;
+        bool first = true;
+        int i = 0;
+        MOVE move;
 
-	move.final_row = 'a';
-	move.final_col = 1;
-	move.initial_row = 'a';
-	move.initial_col = 1;
+        move.final_row = 'a';
+        move.final_col = 1;
+        move.initial_row = 'a';
+        move.initial_col = 1;
 
-	move.final_row_val = get_row(move.final_row, &chess_board);
-	block_val_final = get_block(move.final_col, move.final_row_val);
-	move.initial_row_val = get_row(move.initial_row, &chess_board);
-	block_val_initial = get_block(move.initial_col, move.initial_row_val);
+        move.final_row_val = get_row(move.final_row, &chess_board);
+        block_val_final = get_block(move.final_col, move.final_row_val);
+        move.initial_row_val = get_row(move.initial_row, &chess_board);
+        block_val_initial = get_block(move.initial_col, move.initial_row_val);
 
-	temp_move.initial_col = -1;
-	temp_block_val_final = 0;
+        temp_move[i].initial_col = -1;
+        temp_block_val_final = 0;
 
-	while(move.final_row < 'i'){
-		while(move.final_col < 9){
-			while(move.initial_row < 'i'){
-				while(move.initial_col < 9){
-					move.final_row_val = get_row(move.final_row, &chess_board);
-					block_val_final = get_block(move.final_col, move.final_row_val);
-					move.initial_row_val = get_row(move.initial_row, &chess_board);
-					block_val_initial = get_block(move.initial_col, move.initial_row_val);
-					temp = chess_board;
-					if(((block_val_initial >> 3) && !white_turn) || (!(block_val_initial >> 3) && white_turn)){
-						if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board) ){
-							if(move_piece(&move, &chess_board)){
-								if(!king_check(king_row, king_col, &chess_board)){
-									if(first){
-										temp_move = move;
-										first = false;
-									}
-									chess_board = temp;
-									if(block_val_final > temp_block_val_final){
-										printf("5");
-										printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
-										temp_block_val_final = block_val_final;
-										temp_move = move;
-									}
-								}
-							}
-						}
-					}
-					chess_board = temp;
-					move.initial_col++;
-				}
-				move.initial_col = 1;
-				move.initial_row++;
-			}
-			move.initial_col = 1;
-			move.initial_row = 'a';
-			move.final_col++;
-		}
-		move.initial_col = 1;
-		move.initial_row = 'a';
-		move.final_col = 1;
-		move.final_row++;
-	}
-	if(first){
-		move.final_row = 'a';
-		move.final_col = 1;
-		move.initial_row = king_row;
-		move.initial_col = king_col;
-		temp2 = chess_board;
-		move.initial_row_val = get_row(move.initial_row, &chess_board);
-		block_val_initial = get_block(move.initial_col, move.initial_row_val);
-		while(move.final_row < 'i'){
-			while(move.final_col < 9){
-				move.final_row_val = get_row(move.final_row, &chess_board);
-				block_val_final = get_block(move.final_col, move.final_row_val);
-				if(((block_val_initial >> 3) && !white_turn) || (!(block_val_initial >> 3) && white_turn)){
-					temp = chess_board;
-					if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board)){
-						if(move_piece(&move, &chess_board)){
-							if(!king_check(move.final_row, move.final_col, &chess_board)){
-								if(first){
-									temp_move = move;
-									first = false;
-								}
-								if(block_val_final > temp_block_val_final){
-									printf("6");
-									chess_board = temp2;
-									printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
-									temp_block_val_final = block_val_final;
-									temp_move = move;
-								}
-							}
-						}
-					}
-					temp = chess_board;
-				}
-				chess_board = temp2;
-				move.final_col++;
-			}
-			move.final_col = 1;
-			move.final_row++;
-		}
-	}
-	printf("\nPossible move\n%c\t%d\n%c\t%d\n",temp_move.initial_row, temp_move.initial_col, temp_move.final_row, temp_move.final_col);
+        while(move.final_row < 'i'){
+                while(move.final_col < 9){
+                        while(move.initial_row < 'i'){
+                                while(move.initial_col < 9){
+                                        move.final_row_val = get_row(move.final_row, &chess_board);
+                                        block_val_final = get_block(move.final_col, move.final_row_val);
+                                        move.initial_row_val = get_row(move.initial_row, &chess_board);
+                                        block_val_initial = get_block(move.initial_col, move.initial_row_val);
+                                        temp = chess_board;
+                                        if(((block_val_initial >> 3) && !white_turn) || (!(block_val_initial >> 3) && white_turn)){
+                                                if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board) ){
+                                                        if(move_piece(&move, &chess_board)){
+                                                                if(!king_check(king_row, king_col, &chess_board)){
+                                                                        chess_board = temp;
+                                                                        //                                                                              printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
+                                                                        temp_move[i] = move;
+                                                                        i++;
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                        chess_board = temp;
+                                        move.initial_col++;
+                                }
+                                move.initial_col = 1;
+                                move.initial_row++;
+                        }
+                        move.initial_col = 1;
+                        move.initial_row = 'a';
+                        move.final_col++;
+                }
+                move.initial_col = 1;
+                move.initial_row = 'a';
+                move.final_col = 1;
+                move.final_row++;
+        }
+        if(first){
+                move.final_row = 'a';
+                move.final_col = 1;
+                move.initial_row = king_row;
+                move.initial_col = king_col;
+                temp2 = chess_board;
+                move.initial_row_val = get_row(move.initial_row, &chess_board);
+                block_val_initial = get_block(move.initial_col, move.initial_row_val);
+                while(move.final_row < 'i'){
+                        while(move.final_col < 9){
+                                move.final_row_val = get_row(move.final_row, &chess_board);
+                                block_val_final = get_block(move.final_col, move.final_row_val);
+                                if(((block_val_initial >> 3) && !white_turn) || (!(block_val_initial >> 3) && white_turn)){
+                                        temp = chess_board;
+                                        if(legal_move_check(block_val_initial, block_val_final, &move, &chess_board)){
+                                                if(move_piece(&move, &chess_board)){
+                                                        if(!king_check(move.final_row, move.final_col, &chess_board)){
+                                                                if(first){
+                                                                        temp_move[i] = move;
+                                                                        i++;
+                                                                        first = false;
+                                                                }
+                                                                if(block_val_final > temp_block_val_final){
+                                                                        chess_board = temp2;
+                                                                        //                                                                      printf("\nPossible move\n%c\t%d\n%c\t%d\n",move.initial_row, move.initial_col, move.final_row, move.final_col);
+                                                                        temp_block_val_final = block_val_final;
+                                                                        temp_move[i] = move;
+                                                                        i++;
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                        temp = chess_board;
+                                }
+                                chess_board = temp2;
+                                move.final_col++;
+                        }
+                        move.final_col = 1;
+                        move.final_row++;
+                }
+        }
+        //      printf("\nPossible move\n%c\t%d\n%c\t%d\n",temp_move[i].initial_row, temp_move[i].initial_col, temp_move[i].final_row, temp_move[i].final_col);
 
-	return temp_move;
+        return i - 1;
 }
+

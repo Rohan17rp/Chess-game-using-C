@@ -83,7 +83,6 @@ void display_saved_board(char display_board[37][58], FILE *fp){
 	system("clear");
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
-			//	printf("%c",display_board[i][j]);
 			color(display_board[i][j], i, j);
 		}
 			printf("\n");
@@ -140,7 +139,6 @@ void change_move(char initial_row, uint32_t initial_col, char final_row, uint32_
 	system("clear");
 	for(i = 0; i < 37; i++){
 		for(j = 0; j < 58; j++){
-			//		printf("%c",display_board[i][j]);
 			color(display_board[i][j], i, j);
 		}
 			printf("\n");

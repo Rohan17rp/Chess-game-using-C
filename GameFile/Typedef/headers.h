@@ -12,4 +12,5 @@
 #include<errno.h>
 #include<ctype.h>
 #include<dirent.h>
+#include<time.h>
 #endif
