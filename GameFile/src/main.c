@@ -57,10 +57,15 @@ int main(int argc, char *argv[]){
 			fp = open_file(fp, name, "rw");
 			while(count < 8 && fscanf(fp, "%x",&chess_board.row[count++]));	
 			int temp;
-			fscanf(fp, "%s%d",name, &temp);
+			fscanf(fp, "%s%d%d",name, &temp, &mode);
 			white_turn = temp ? true : false ;
 			fclose(fp);
-			strcpy(name2, "BOT");
+			
+			if(mode == 3){
+				white_color = temp ? true : false;
+			}
+			strcpy(name2, " ");
+
 			printf("Game Sucessfully Loaded\n");
 		}
 		else if(mode == 2){
@@ -113,14 +118,6 @@ int main(int argc, char *argv[]){
 			system("clear");
 			/*Display Default Board */
 			display_board_set_default(display_board);
-
-			//			printf("Not yet implemented\n");
-
-
-			//			printf("\nPress 'ENTER' to exit to menu\n");
-			//			if(getchar() && getchar()){
-			//				valid_mode = false;
-			//			}
 		}
 		else if(mode == 4){
 			/* Using cat code */
@@ -206,7 +203,7 @@ int main(int argc, char *argv[]){
 	/* Play game in 2 player mode*/
 	while(!check_mate){
 		get_user_name(white_color, white_turn, name, name2, mode);
-		if(mode == 1 || mode == 2 || !(white_color ^ white_turn)){
+		if(mode == 2 || !(white_color ^ white_turn)){
 			/* Take input from user */
 			token = getToken(&move);
 		}
@@ -242,7 +239,7 @@ int main(int argc, char *argv[]){
 				save_to_file++;
 			}
 			save_to_file = 0;
-			fprintf(fp, "%s\n%d", name, white_turn);
+			fprintf(fp, "%s\n%d\n%d", name, white_turn, mode);
 			fclose(fp);
 
 			printf("Game State Saved\n");
@@ -339,17 +336,17 @@ void get_user_name(bool color, bool white_turn, char *name, char *name2, int mod
 			if(white_turn)
 				printf("w-> %s's turn\n",name);
 			else
-				printf("b->");
+				printf("b->\n");
 		}
 		else{
 			if(!white_turn)
 				printf("b-> %s's turn\n",name);
 			else
-				printf("w->");
+				printf("w->\n");
 		}
 	}
 	else if(mode == 1 || mode == 2){
-		if(color){
+		if(!color){
 			if(white_turn)
 				printf("w-> %s's turn\n", name);
 			else

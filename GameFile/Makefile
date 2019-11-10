@@ -1,6 +1,6 @@
 clean: project
 	rm *.o
-project: main.o boards.o legal_moves.o moves.o pieces.o ui.o board_display.o calculate_pins.o attack_bit_boards.o
+project: main.o boards.o legal_moves.o moves.o pieces.o ui.o board_display.o attack_bit_boards.o
 	gcc -g -o project main.o boards.o legal_moves.o moves.o pieces.o ui.o board_display.o attack_bit_boards.o
 main.o: src/main.c
 	gcc -g -c src/main.c
@@ -16,7 +16,5 @@ ui.o: UI/ui.c
 	gcc -g -c UI/ui.c
 board_display.o: UI/board_display.c
 	gcc -g -c UI/board_display.c
-calculate_pins.o: 1player/calculate_pins.c
-	gcc -g -c 1player/calculate_pins.c
 attack_bit_boards.o: Boards/attack_bit_boards.c
 	gcc -g -c Boards/attack_bit_boards.c
