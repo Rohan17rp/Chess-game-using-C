@@ -3,7 +3,7 @@ MIS     : 111803161
 Name    : Rohan Pravin Patil
 
 INTRO:
-1. A basic implementation of 2-player chess engine
+1. A basic implementation of 2-player chess engine, along with 1 player option
 2. White player being the one on Upper side denoted by UppperCase letters in yellow color,
 	Black would be in lower side as lowerCase letters in cyan color
 3. Use make command from terminal for compiling and ./project to run the code 
@@ -16,7 +16,7 @@ INTRO:
 
 ISSUES:
 1. En-passen, Castling and Pawn promotion not handled
-2. 1player mode generates random moves
+2. 1player mode generates random moves (No specific algorithm implemented for it)
 
 SAVE & LOAD GAME:
 Save a game to file and retrive game from a file implemented
@@ -33,6 +33,7 @@ N - Knight
 B - Bishop
 Q - Queen
 K - King
+NOTE:- same denotions in lower_case apply for black
 
 EASE OF ACCESS:
 Use ctrl and '-' keys together to shrink the terminal screen for better View if the board is not completely visible

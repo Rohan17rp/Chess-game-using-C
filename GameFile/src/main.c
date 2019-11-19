@@ -1,7 +1,5 @@
 #include "modules.h"
 
-bool check_check_mate(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE move, BOARD chess_board, char king_row, int king_col, bool white_turn);
-int return_legal_move(CHESS_PIECE *move_bit_board, CHESS_PIECE *pieces, MOVE *move, int size, BOARD chess_board, char king_row, int king_col, bool white_turn);
 
 int main(int argc, char *argv[]){
 
